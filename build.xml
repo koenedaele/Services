@@ -6,12 +6,12 @@
 	<!-- Default values voor properties -->
 	<property name="crab.user" value="USER" />
 	<property name="crab.password" value="PWD" />
-	<property name="crab.run_integration_tests" value="false" />
+	<property name="crab.run_integration_tests" value="0" />
 	<property name="crab.proxy_host" value="" />
 	<property name="crab.proxy_port" value="" />
 	<property name="capakey.user" value="USER" />
 	<property name="capakey.password" value="PWD" />
-	<property name="capakey.run_integration_tests" value="false" />
+	<property name="capakey.run_integration_tests" value="0" />
 	<property name="capakey.proxy_host" value="" />
 	<property name="capakey.proxy_port" value="" />
 
