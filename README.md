@@ -2,6 +2,10 @@
 
 Deze bibliotheek bevat code om een aantal services van het AGIV te gebruiken vanuit php. Voorlopig is er een interface naar de CaPaKey webservice. Op termijn komt er ook een interface naar de CRAB webservice bij. Om deze interfaces te kunnen gebruiken heb je toegang nodig. Een login en wachtwoord kan je verkrijgen op de website van het AGIV (http://www.agiv.be)
 
+## Build status
+
+[![travis-ci status](https://secure.travis-ci.org/koenedaele/Services.png)](http://travis.ci-org/koenedaele/Services.png)
+
 ## Gebruik van de Unit Tests
 
 Deze bibliotheek werd ontwikkeld met bijhorende unit tests. Om te controleren of de code naar behoren werkt op uw systeem kun je deze uitvoeren. Hiervoor is een recente versie van PHPUnit nodig (3.5 of 3.6) en een recente versie van Phing (2.4).
