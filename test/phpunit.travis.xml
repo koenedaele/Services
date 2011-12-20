@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpunit
+	colors="true"
+	bootstrap="bootstrap.php">
+
+	<testsuites>
+		<testsuite name="Agiv">
+			<directory>tests/KVD/Services/Agiv/</directory>
+		</testsuite>
+	</testsuites>
+
+	<filter>
+		<whitelist addUncoveredFilesFromWhiteList="true">
+			<directory suffix=".php">../lib/</directory>
+			<exclude>
+				<directory suffix=".php">../vendor</directory>
+			</exclude>
+		</whitelist>
+	</filter>
+
+	<logging>
+		<log type="coverage-text" target="php://stdout" />
+	</logging>
+
+	<php>
+		<const name="CRAB_USER" value="" />
+		<const name="CRAB_PASSWORD" value="" />
+		<const name="CRAB_RUN_INTEGRATION_TESTS" value="false" />
+
+		<const name="CAPAKEY_USER" value="" />
+		<const name="CAPAKEY_PASSWORD" value="" />
+		<const name="CAPAKEY_RUN_INTEGRATION_TESTS" value="false" />
+	</php>
+
+</phpunit>

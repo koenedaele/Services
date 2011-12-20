@@ -54,16 +54,16 @@
 	</target>
 
 	<target name="genBootstrap">
-		<copy file="test/dev/bootstrap.php.tpl" tofile="test/bootstrap.php" overwrite="true">
+		<copy file="test/dev/phpunit.xml" tofile="test/phpunit.xml" overwrite="true">
 			<filterchain>
-				<replacetokens begintoken="@@" endtoken="@@">
+				<replacetokens begintoken="%%" endtoken="%%">
 					<token key="CRAB_USER" value="${crab.user}" />
-					<token key="CRAB_PWD" value="${crab.password}" />
+					<token key="CRAB_PASSWORD" value="${crab.password}" />
 					<token key="CRAB_RUN_INTEGRATION_TESTS" value="${crab.run_integration_tests}" />
 					<token key="CRAB_PROXY_HOST" value="${crab.proxy_host}" />
 					<token key="CRAB_PROXY_PORT" value="${crab.proxy_port}" />
 					<token key="CAPAKEY_USER" value="${capakey.user}" />
-					<token key="CAPAKEY_PWD" value="${capakey.password}" />
+					<token key="CAPAKEY_PASSWORD" value="${capakey.password}" />
 					<token key="CAPAKEY_RUN_INTEGRATION_TESTS" value="${capakey.run_integration_tests}" />
 					<token key="CAPAKEY_PROXY_HOST" value="${capakey.proxy_host}" />
 					<token key="CAPAKEY_PROXY_PORT" value="${capakey.proxy_port}" />
@@ -73,30 +73,7 @@
 	</target>
 
 	<target name="runTests" description="Laat de Unit Tests lopen." depends="createBuildDir,genBootstrap">
-		<available file="build/coverage.xml" type="file" property="build.coverage_exists" />
-		<available file="build/testsuites.xml" type="file" property="build.testsuite_exists" />
-		<available file="build/clover-coverage.xml" type="file" property="build.clover-coverage_xml_exists" />
-		<if>
-			<istrue value="build.coverage_exists" />
-			<then>
-				<delete file="build/coverage.xml" />
-			</then>
-		</if>
-		<if>
-			<istrue value="build.testsuites_exists" />
-			<then>
-				<delete file="build/testsuites.xml" />
-			</then>
-		</if>
-		<if>
-			<istrue value="build.clover-coverage_exists" />
-			<then>
-				<delete file="build/clover-coverage.xml" />
-			</then>
-		</if>
-		<exec command="phpunit --bootstrap test/bootstrap.php 
-							   --configuration test/config/testsuites.xml 
-							   --log-junit build/testsuites.xml"
+		<exec command="phpunit --configuration test/phpunit.xml"
 			  passthru="true" returnProperty="testsExit" />
 		<if>
 			<equals arg1="${testsExit}" arg2="0" />
@@ -115,23 +92,7 @@
 		<mkdir dir="build/reports" />
 		<mkdir dir="build/reports/tests" />
 		<mkdir dir="build/reports/coverage" />
-		<available file="build/testsuites.xml" type="file" property="build.testsuite_exists" />
-		<available file="build/clover-coverage.xml" type="file" property="build.clover-coverage_xml_exists" />
-		<if>
-			<istrue value="build.testsuites_exists" />
-			<then>
-				<delete file="build/testsuites.xml" />
-			</then>
-		</if>
-		<if>
-			<istrue value="build.clover-coverage_exists" />
-			<then>
-				<delete file="build/clover-coverage.xml" />
-			</then>
-		</if>
-		<exec command="phpunit --bootstrap test/bootstrap.php 
-							   --configuration test/config/testsuites.xml 
-							   --log-junit build/testsuites.xml
+		<exec command="phpunit --configuration test/phpunit.xml 
 							   --coverage-html build/reports/coverage
 							   --coverage-clover build/clover-coverage.xml"
 			  passthru="true" returnProperty="testsExit" />
@@ -153,14 +114,6 @@
 		<exec command="phpcs --standard=PEAR ${project.basedir}/classes 
 			--report-summary --report-full=${project.basedir}/build/reports/sniffs/sniffs.txt
 			--report-checkstyle=${project.basedir}/build/reports/sniffs/checkstyle.xml" />
-		<copy file="build/reports/sniffs/checkstyle.xml" tofile="build/bitten_lint.xml" overwrite="true">
-			<filterchain>
-				<xsltfilter style="phing/style/checkstyle_to_bitten.xslt" />
-				<replaceregexp>
-					<regexp pattern="${project.basedir}" replace="" />
-				</replaceregexp>
-			</filterchain>
-		</copy>
 	</target>
 
 	<target name="genDocs" description="Genereer de documentatie." depends="createBuildDir">
