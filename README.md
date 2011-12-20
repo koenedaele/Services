@@ -4,7 +4,7 @@ Deze bibliotheek bevat code om een aantal services van het AGIV te gebruiken van
 
 ## Build status
 
-[![travis-ci status](https://secure.travis-ci.org/koenedaele/Services.png)](http://travis.ci-org/koenedaele/Services.png)
+[![travis-ci status](https://secure.travis-ci.org/koenedaele/Services.png)](http://travis-ci.org/koenedaele/Services.png)
 
 ## Gebruik van de Unit Tests
 
