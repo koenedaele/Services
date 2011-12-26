@@ -54,7 +54,7 @@
 	</target>
 
 	<target name="genBootstrap">
-		<copy file="test/dev/phpunit.xml" tofile="test/phpunit.xml" overwrite="true">
+		<copy file="test/dev/phpunit.dist.xml" tofile="test/phpunit.xml" overwrite="true">
 			<filterchain>
 				<replacetokens begintoken="%%" endtoken="%%">
 					<token key="CRAB_USER" value="${crab.user}" />
