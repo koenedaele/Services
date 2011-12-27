@@ -11,7 +11,7 @@ namespace KVD\Services\Agiv\Crab;
 use KVD\Services\Agiv as A;
 
 /**
- * Class die een gemeente voorstelt zoals gekend door de Agiv CRAB webservice. 
+ * Class die een wegobject voorstelt zoals gekend door de Agiv CRAB webservice. 
  * 
  * @package   KVD.Services.Agiv.Crab
  * @since     0.1.0
@@ -19,61 +19,46 @@ use KVD\Services\Agiv as A;
  * @author    Koen Van Daele <koen_van_daele@telenet.be> 
  * @license   http://www.osor.eu/eupl The European Union Public Licence
  */
-class Gemeente
+class Wegobject
 {
     /**
      * id 
      * 
-     * @var integer
+     * @var string
      */
     protected $id;
 
     /**
-     * niscode
+     * straat
      *
-     * @var integer
+     * @var Straat
      */
-    protected $niscode;
+    protected $straat;
 
     /**
-     * namen
+     * aard
      *
-     * @var array Een array waarin elke sleutel een taal is en elke waarde de 
-     *            naam van de gemeente.
+     * @var mixed Integer of Wegobject
      */
-    protected $namen;
+    protected $aard;
 
     /**
-     * taalCode
+     * centroid
      *
-     * @var string
-     */
-    protected $taalCode;
-
-    /**
-     * taalCodeTweedeTaal
-     *
-     * @var string
-     */
-    protected $taalCodeTweedeTaal;
-
-    /**
-     * centroid 
-     * 
      * @var A\Centroid
      */
     protected $centroid;
 
     /**
-     * boundingbox 
-     * 
+     * boundingbox
+     *
      * @var A\BoundingBox
      */
     protected $boundingbox;
 
     /**
-     * gateway 
-     * 
+     * gateway
+     *
      * @var Gateway
      */
     protected $gateway;
@@ -81,25 +66,20 @@ class Gemeente
     /**
      * __construct 
      * 
-     * @param integer       $id
-     * @param integer       $niscode
-     * @param array         $namen
-     * @param string        $taalCode
-     * @param string        $taalCodeTweedeTaal
+     * @param integer       $string
+     * @param String        $straat
+     * @param integer       $aard
      * @param A\Centroid    $center
      * @param A\BoundingBox $box
      * @return void
      */
-    public function __construct( $id, $niscode, array $namen,
-                                 $taalCode, $taalCodeTweedeTaal = null,
+    public function __construct( $id, Straat $straat, $aard,
                                  A\Centroid $center = null,
                                  A\BoundingBox $box = null)
     {
         $this->id = $id;
-        $this->niscode = $niscode;
-        $this->namen = $namen;
-        $this->taalCode = $taalCode;
-        $this->taalCodeTweedeTaal = $taalCodeTweedeTaal;
+        $this->straat = $straat;
+        $this->aard = $aard;
         $this->centroid = $center;
         $this->boundingbox = $box;
     }
@@ -125,9 +105,9 @@ class Gemeente
     protected function doLazyLoad( )
     {
         $this->checkGateway( );
-        $gemeente = $this->gateway->getGemeenteById( $this->id );
-        $this->centroid = $gemeente->getCentroid( );
-        $this->boundingbox = $gemeente->getBoundingBox( );
+        $wegobject = $this->gateway->getWegobjectById( $this->straat, $this->id );
+        $this->centroid = $wegobject->getCentroid( );
+        $this->boundingbox = $wegobject->getBoundingBox( );
     }
 
     /**
@@ -141,47 +121,23 @@ class Gemeente
     }
 
     /**
-     * getNisCode
+     * getStraat
+     *
+     * @return Straat
+     */
+    public function getStraat( )
+    {
+        return $this->straat;
+    }
+
+    /**
+     * getAard
      *
      * @return integer
      */
-    public function getNisCode( )
+    public function getAard( )
     {
-        return $this->niscode;
-    }
-
-    /**
-     * getNaam
-     *
-     * @return string
-     */
-    public function getNaam( $taal = 'nl' )
-    {
-        if ( isset( $this->namen[$taal] ) ) {
-            return $this->namen[$taal];
-        } else {
-            return $this->namen['nl'];
-        }
-    }
-
-    /**
-     * getTaalCode
-     *
-     * @return string
-     */
-    public function getTaalCode( )
-    {
-        return $this->taalCode;
-    }
-
-    /**
-     * getTaalCodeTweedeTaal
-     *
-     * @return string
-     */
-    public function getTaalCodeTweedeTaal( )
-    {
-        return $this->taalCodeTweedeTaal;
+        return $this->aard;
     }
 
     /**

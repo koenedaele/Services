@@ -11,7 +11,7 @@ namespace KVD\Services\Agiv\Crab;
 use KVD\Services\Agiv as A;
 
 /**
- * Class die een gemeente voorstelt zoals gekend door de Agiv CRAB webservice. 
+ * Class die een straat voorstelt zoals gekend door de Agiv CRAB webservice. 
  * 
  * @package   KVD.Services.Agiv.Crab
  * @since     0.1.0
@@ -19,7 +19,7 @@ use KVD\Services\Agiv as A;
  * @author    Koen Van Daele <koen_van_daele@telenet.be> 
  * @license   http://www.osor.eu/eupl The European Union Public Licence
  */
-class Gemeente
+class Straat
 {
     /**
      * id 
@@ -29,11 +29,19 @@ class Gemeente
     protected $id;
 
     /**
-     * niscode
+     * gemeente
      *
-     * @var integer
+     * @var Gemeente
      */
-    protected $niscode;
+    protected $gemeente;
+
+    /**
+     * De naam van de straat in de eerste taal, zonder het eventuele 
+     * achtervoegsel dat de naam uniek maakt.
+     *
+     * @var string
+     */
+    protected $label;
 
     /**
      * namen
@@ -44,32 +52,11 @@ class Gemeente
     protected $namen;
 
     /**
-     * taalCode
+     * Code die aangeeft welke de eerste taal is voor deze straat.
      *
      * @var string
      */
     protected $taalCode;
-
-    /**
-     * taalCodeTweedeTaal
-     *
-     * @var string
-     */
-    protected $taalCodeTweedeTaal;
-
-    /**
-     * centroid 
-     * 
-     * @var A\Centroid
-     */
-    protected $centroid;
-
-    /**
-     * boundingbox 
-     * 
-     * @var A\BoundingBox
-     */
-    protected $boundingbox;
 
     /**
      * gateway 
@@ -82,26 +69,20 @@ class Gemeente
      * __construct 
      * 
      * @param integer       $id
-     * @param integer       $niscode
+     * @param Gemeente      $gemeente
+     * @param string        $label
      * @param array         $namen
      * @param string        $taalCode
-     * @param string        $taalCodeTweedeTaal
-     * @param A\Centroid    $center
-     * @param A\BoundingBox $box
      * @return void
      */
-    public function __construct( $id, $niscode, array $namen,
-                                 $taalCode, $taalCodeTweedeTaal = null,
-                                 A\Centroid $center = null,
-                                 A\BoundingBox $box = null)
+    public function __construct( $id, Gemeente $gemeente, $label,
+                                 array $namen, $taalCode )
     {
         $this->id = $id;
-        $this->niscode = $niscode;
+        $this->gemeente = $gemeente;
+        $this->label = $label;
         $this->namen = $namen;
         $this->taalCode = $taalCode;
-        $this->taalCodeTweedeTaal = $taalCodeTweedeTaal;
-        $this->centroid = $center;
-        $this->boundingbox = $box;
     }
 
     /**
@@ -125,9 +106,9 @@ class Gemeente
     protected function doLazyLoad( )
     {
         $this->checkGateway( );
-        $gemeente = $this->gateway->getGemeenteById( $this->id );
-        $this->centroid = $gemeente->getCentroid( );
-        $this->boundingbox = $gemeente->getBoundingBox( );
+        $straat = $this->gateway->getStraatById( $this->id );
+        //$this->centroid = $gemeente->getCentroid( );
+        //$this->boundingbox = $gemeente->getBoundingBox( );
     }
 
     /**
@@ -141,13 +122,23 @@ class Gemeente
     }
 
     /**
-     * getNisCode
+     * getGemeente
      *
-     * @return integer
+     * @return Gemeente
      */
-    public function getNisCode( )
+    public function getGemeente( )
     {
-        return $this->niscode;
+        return $this->gemeente;
+    }
+
+    /**
+     * getLabel
+     *
+     * @return string
+     */
+    public function getLabel( )
+    {
+        return $this->label;
     }
 
     /**
@@ -174,40 +165,5 @@ class Gemeente
         return $this->taalCode;
     }
 
-    /**
-     * getTaalCodeTweedeTaal
-     *
-     * @return string
-     */
-    public function getTaalCodeTweedeTaal( )
-    {
-        return $this->taalCodeTweedeTaal;
-    }
-
-    /**
-     * getCentroid
-     *
-     * @return A\Centroid
-     */
-    public function getCentroid( )
-    {
-        if ( $this->centroid === null ) {
-            $this->doLazyLoad( );
-        }
-        return $this->centroid;
-    }
-
-    /**
-     * getBoundingBox
-     *
-     * @return A\BoundingBox
-     */
-    public function getBoundingBox( )
-    {
-        if ( $this->boundingbox === null ) {
-            $this->doLazyLoad( );
-        }
-        return $this->boundingbox;
-    }
 }
 ?>
