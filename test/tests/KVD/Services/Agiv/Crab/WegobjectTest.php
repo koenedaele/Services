@@ -36,7 +36,7 @@ class WegobjectTest extends \PHPUnit_Framework_TestCase
                                         'nl');
         $this->straat = new Straat( 1, $this->gemeente, 'Nieuwstraat',
                                     $this->straatNamen, 'nl' );
-        $this->wegobject = new WegObject( 123456789, $this->straat, 4,
+        $this->wegobject = new Wegobject( 123456789, $this->straat, 4,
                                           $this->centroid, $this->boundingbox );
 
     }
