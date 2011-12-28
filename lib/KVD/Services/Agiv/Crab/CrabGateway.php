@@ -371,5 +371,80 @@ class CrabGateway
         }
         return $res;
     }
+
+    /**
+     * listHuisnummersByTerreinobject
+     *
+     * @param  Terreinobject $terreinobject
+     * @return array
+     */
+    public function listHuisnummersByTerreinObject( TerreinObject $terreinobject )
+    {
+        $p = new \StdClass();
+        $p->IdentificatorTerreinobject = $terreinobject->getId( );
+        $p->SorteerVeld = 2;
+        $pWrapper = new \SoapParam ( $p , "ListHuisnummersByIdentificatorTerreinobject" );
+        $resultaat = $this->client->ListHuisnummersByIdentificatorTerreinobject( $pWrapper );
+        $huisnummers = $resultaat->ListHuisnummersByIdentificatorTerreinobjectResult->HuisnummerItem;
+        $res = array( );
+        foreach ( $huisnummers as $hnr ) {
+            $h = new Huisnummer( $hnr->HuisnummerId, null,
+                                 $hnr->Huisnummer );
+            $h->setGateway( $this );
+            $res[] = $h;
+        }
+        return $res;
+    }
+
+    /**
+     * listTerreinobjectenByHuisnummer
+     *
+     * @param  Huisnummer $huisnummer
+     * @return array
+     */
+    public function listTerreinobjectenByHuisnummer( Huisnummer $huisnummer )
+    {
+        $p = new \StdClass();
+        $p->HuisnummerId = $huisnummer->getId( );
+        $p->SorteerVeld = 1;
+        $pWrapper = new \SoapParam ( $p , "ListTerreinobjectenByHuisnummerId" );
+        $resultaat = $this->client->ListTerreinobjectenByHuisnummerId( $pWrapper );
+        $res = array( );
+        if ( isset( $resultaat->ListTerreinobjectenByHuisnummerIdResult->TerreinobjectItem ) ) {
+            $terreinobjecten = $resultaat->ListTerreinobjectenByHuisnummerIdResult->TerreinobjectItem;
+            foreach ( $terreinobjecten as $terobj ) {
+                $to = new Terreinobject( $terobj->IdentificatorTerreinobject,
+                                         $terobj->AardTerreinobject );
+                $to->setGateway( $this );
+                $res[] = $to;
+            }
+        }
+        return $res;
+    }
+
+    /**
+     * getTerreinobjectById
+     *
+     * @param  string        $id
+     * @return Terreinobject
+     */
+    public function getTerreinobjectById( $id )
+    {
+        $p = new \StdClass();
+        $p->IdentificatorTerreinobject = $id;
+        $pWrapper = new \SoapParam( $p, 'GetTerreinobjectByIdentificatorTerreinobject' );
+        $resultaat = $this->client->GetTerreinobjectByIdentificatorTerreinobject( $pWrapper );
+        $terobj = $resultaat->GetTerreinobjectByIdentificatorTerreinobjectResult;
+        $to = new Terreinobject( $terobj->IdentificatorTerreinobject,
+                                 $terobj->AardTerreinobject,
+                                 new A\Centroid( $terobj->CenterX,
+                                                 $terobj->CenterY),
+                                 new A\BoundingBox( $terobj->MinimumX,
+                                                    $terobj->MinimumY,
+                                                    $terobj->MaximumX,
+                                                    $terobj->MaximumY ) );
+        $to->setGateway( $this );
+        return $to;
+    }
 }
 ?>

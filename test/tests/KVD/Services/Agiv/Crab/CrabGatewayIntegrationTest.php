@@ -168,5 +168,46 @@ class CrabGatewayIntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Huisnummer', $first );
     }
 
+    public function testListHuisnummersByIdentificatorTerreinobject( )
+    {
+        $percid = '31013_D_0239_C_004_00';
+        $terrein  = $this->gateway->getTerreinobjectById( $percid );
+        $huisnummers = $this->gateway
+                            ->listHuisnummersByTerreinobject( $terrein );
+        $this->assertInternalType( 'array', $huisnummers );
+        $first = $huisnummers[0];
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Huisnummer', $first );
+    }
+
+    public function testListTerreinobjectenByHuisnummer( )
+    {
+        $straat = $this->gateway->getStraatById( 48086 );
+        $huisnummers = $this->gateway->listHuisnummersByStraat( $straat );
+        for ( $i=0; $i < count( $huisnummers ); $i++ ) {
+            $hnr = $huisnummers[$i];
+            $terreinobjecten = $this
+                                ->gateway
+                                ->listTerreinobjectenByHuisnummer( $hnr );
+            if ( count($terreinobjecten) > 0 ) {
+                break;
+            }
+        }
+        if ( $i == count( $huisnummers ) ) {
+            //Om de een of de andere reden is er geen enkel huisnummer
+            //gekoppeld aan terreinobjecten
+            $this->markTestSkipped( );
+        }
+        $this->assertInternalType( 'array', $terreinobjecten );
+        $first = $terreinobjecten[0];
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Terreinobject', $first );
+    }
+
+    public function testGetTerreinobjectById( )
+    {
+        $percid = '31013_D_0239_C_004_00';
+        $terreinobject = $this->gateway->getTerreinobjectById( $percid );
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Terreinobject', $terreinobject );
+    }
+
 }
 ?>

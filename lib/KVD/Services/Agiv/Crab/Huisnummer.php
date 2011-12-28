@@ -44,6 +44,13 @@ class Huisnummer
     protected $huisnummer;
 
     /**
+     * terreinobjecten,
+     *
+     * @var array
+     */
+    protected $terreinobjecten;
+
+    /**
      * gateway
      *
      * @var CrabGateway
@@ -58,17 +65,18 @@ class Huisnummer
      * @param mixed $huisnummer
      * @return void
      */
-    public function __construct( $id, Straat $straat, $huisnummer )
+    public function __construct( $id, Straat $straat = null, $huisnummer )
     {
         $this->id = $id;
         $this->straat = $straat;
         $this->huisnummer = $huisnummer;
+        $this->terreinobjecten = null;
     }
 
     /**
-     * setGateway 
-     * 
-     * @param CrabGateway $gateway 
+     * setGateway
+     *
+     * @param CrabGateway $gateway
      * @return void
      */
     public function setGateway( CrabGateway $gateway )
@@ -101,6 +109,11 @@ class Huisnummer
      */
     public function getStraat( )
     {
+        if ( $this->straat === null ) {
+            $this->checkGateway( );
+            $hnr = $this->gateway->getHuisnummerById( $this->id );
+            $this->straat = $hnr->getStraat( );
+        }
         return $this->straat;
     }
 
@@ -112,5 +125,18 @@ class Huisnummer
     public function getHuisnummer( )
     {
         return $this->huisnummer;
+    }
+
+    /**
+     * getTerreinobjecten
+     *
+     * @return array
+     */
+    public function getTerreinobjecten( )
+    {
+        if ( $this->terreinobjecten === null ) {
+            $this->checkGateway( );
+            $this->terreinobjecten = $this->gateway->listTerreinobjectenByHuisnummer( $this );
+        }
     }
 }

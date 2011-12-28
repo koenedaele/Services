@@ -57,5 +57,29 @@ class StraatTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'Nieuwstraat', $this->straat->getNaam( 'en' ) );
     }
 
+    public function testGetHuisnummers( )
+    {
+        $gateway = $this->getMockBuilder('KVD\Services\Agiv\Crab\CrabGateway')
+                        ->disableOriginalConstructor( )
+                        ->setMethods( array( 'listHuisnummersByStraat') )
+                        ->getMock( );
+        $huisnummers = array( );
+        $huisnummer = new Huisnummer( 887821, null, '68');
+        $gateway->expects( $this->exactly( 1 ) )
+                ->method( 'listHuisnummersByStraat' )
+                ->will( $this->returnValue( $huisnummers ) );
+        $this->straat->setGateway( $gateway );
+        $hnr = $this->straat->getHuisnummers( );
+        $this->assertSame( $huisnummers, $hnr );
+    }
+
+    /**
+     * @expectedException LogicException
+     */
+    public function testMissingGateway( )
+    {
+        $hnr = $this->straat->getHuisnummers( );
+    }
+
 }
 ?>

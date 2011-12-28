@@ -51,6 +51,21 @@ class HuisnummerTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( '68', $this->huisnummer->getHuisnummer( ) );
     }
 
+    public function testLazyLoad( )
+    {
+        $gateway = $this->getMockBuilder('KVD\Services\Agiv\Crab\CrabGateway')
+                        ->disableOriginalConstructor( )
+                        ->setMethods( array( 'getHuisnummerById') )
+                        ->getMock( );
+        $gateway->expects( $this->exactly( 1 ) )
+                ->method( 'getHuisnummerById' )
+                ->with( 887821 )
+                ->will( $this->returnValue( $this->huisnummer ) );
+        $huisnummer = new Huisnummer( 887821, null, '68');
+        $huisnummer->setGateway( $gateway );
+        $this->assertSame( $this->straat, $huisnummer->getStraat( ) );
+    }
+
 
 }
 ?>

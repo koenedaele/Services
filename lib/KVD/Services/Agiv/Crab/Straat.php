@@ -59,8 +59,15 @@ class Straat
     protected $taalCode;
 
     /**
-     * gateway 
-     * 
+     * huisnummers
+     *
+     * @var array
+     */
+    protected $huisnummers;
+
+    /**
+     * gateway
+     *
      * @var Gateway
      */
     protected $gateway;
@@ -83,6 +90,7 @@ class Straat
         $this->label = $label;
         $this->namen = $namen;
         $this->taalCode = $taalCode;
+        $this->huisnummers = null;
     }
 
     /**
@@ -101,14 +109,6 @@ class Straat
         if ( !$this->gateway instanceof CrabGateway ) {
             throw new \LogicException ( 'Er is geen gateway ingesteld om extra info op te vragen.' );
         }
-    }
-
-    protected function doLazyLoad( )
-    {
-        $this->checkGateway( );
-        $straat = $this->gateway->getStraatById( $this->id );
-        //$this->centroid = $gemeente->getCentroid( );
-        //$this->boundingbox = $gemeente->getBoundingBox( );
     }
 
     /**
@@ -163,6 +163,21 @@ class Straat
     public function getTaalCode( )
     {
         return $this->taalCode;
+    }
+
+    /**
+     * getHuisnummers
+     *
+     * @return array
+     */
+    public function getHuisnummers( )
+    {
+        if ( $this->huisnummers === null ) {
+            $this->checkGateway( );
+            $this->huisnummers = $this->gateway
+                                      ->listHuisnummersByStraat( $this );
+        }
+        return $this->huisnummers;
     }
 
 }
