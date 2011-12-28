@@ -21,7 +21,7 @@ class CentroidTest extends \PHPUnit_Framework_TestCase
 {
     public function setUp( )
     {
-        $this->centroid = new Centroid( 2, 45 );
+        $this->centroid = new Centroid( 2.0, 45.0 );
     }
 
     public function tearDown( )
@@ -45,6 +45,27 @@ class CentroidTest extends \PHPUnit_Framework_TestCase
         $arr = $this->centroid->toArray( );
         $this->assertEquals( 2, $arr['x'] );
         $this->assertEquals( 45, $arr['y'] );
+    }
+
+    public function testTextValues( )
+    {
+        $centroid = new Centroid( "2.0", "45.0" );
+        $this->assertEquals( 2, $centroid->getX( ) );
+        $this->assertEquals( 45, $centroid->getY( ) );
+    }
+
+    public function testIntegerValues( )
+    {
+        $centroid = new Centroid( 2, 45 );
+        $this->assertEquals( 2, $centroid->getX( ) );
+        $this->assertEquals( 45, $centroid->getY( ) );
+    }
+
+    public function testIllegalValues( )
+    {
+        $centroid = new Centroid( 'x', 'y' );
+        $this->assertEquals( 0, $centroid->getX( ) );
+        $this->assertEquals( 0, $centroid->getY( ) );
     }
 }
 ?>
