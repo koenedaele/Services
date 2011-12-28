@@ -22,6 +22,16 @@ Vooraleer je de tests kunt uitvoeren moet je je gebruikersnaam en wachtwoord ken
 
 Vervang <gebruiker> en <wachtwoord> door je gegevens die je van het AGIV hebt gekregen. De parameters run_integration_tests geven aan of er unit tests moeten gebruikt worden die de webservice rechtstreeks oproepen. Indien deze op false staat zal enkel getest worden wat met een mock verbinding kan getest worden.
 
+De unit tests voer je als volgt uit:
+
+	phing runTests
+
+Indien je een volledig rapport over code coverage wil, doe je:
+
+	phing genTestReports
+
+Dit commando zal een map build/reports/coverage aanmaken waar je kunt zie welke stukken van de code gecovered worden door unit tests.
+
 ## CaPaKey Gateway
 
 ###Voorbeelden
@@ -56,3 +66,17 @@ Rechtstreeks informatie over een perceel ophalen op basis van de CaPaKey
 	echo 'Afdeling: ' . $perceel->getSectie()->getAfdeling()->getNaam() . "\n";
 	echo 'Sectie: ' . $perceel->getSectie()->getId() . "\n";
 	echo 'Perceelsnummer: ' . $perceel->getId() . "\n";
+
+## CRAB Gateway
+
+###Voorbeelden
+
+Aanmaken van de Gateway.
+
+	$wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
+	$client = new SoapClient( $wsdl,
+									array( 'trace' => 1,
+										   'exceptions' => 1,
+										   'features' => SOAP_SINGLE_ELEMENT_ARRAYS ) );
+	$client->setAuthentication( $gebruiker, $wachtwoord );
+	$gateway = new CrabGateway( $this->client );
