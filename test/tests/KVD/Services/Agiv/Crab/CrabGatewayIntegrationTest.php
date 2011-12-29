@@ -209,5 +209,15 @@ class CrabGatewayIntegrationTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Terreinobject', $terreinobject );
     }
 
+    public function testGetPostkantonByHuisnummer( )
+    {
+        $straat = $this->gateway->getStraatById( 48086 );
+        $huisnummers = $this->gateway->listHuisnummersByStraat( $straat );
+        $hnr = $huisnummers[1];
+        $pk = $this->gateway->getPostkantonByHuisnummer( $hnr );
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Postkanton', $pk );
+        $this->assertEquals( 8300, $pk->getCode( ) );
+    }
+
 }
 ?>

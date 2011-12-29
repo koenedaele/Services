@@ -66,6 +66,20 @@ class HuisnummerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame( $this->straat, $huisnummer->getStraat( ) );
     }
 
+    public function testGetPostkanton( )
+    {
+        $gateway = $this->getMockBuilder('KVD\Services\Agiv\Crab\CrabGateway')
+                        ->disableOriginalConstructor( )
+                        ->setMethods( array( 'getPostkantonByHuisnummer') )
+                        ->getMock( );
+        $postkanton = new Postkanton( 5, 8300 );
+        $gateway->expects( $this->exactly( 1 ) )
+                ->method( 'getPostkantonByHuisnummer' )
+                ->will( $this->returnValue( $postkanton ) );
+        $this->huisnummer->setGateway( $gateway );
+        $this->assertSame( $postkanton, $this->huisnummer->getPostkanton( ) );
+    }
+
 
 }
 ?>

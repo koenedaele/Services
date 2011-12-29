@@ -51,6 +51,13 @@ class Huisnummer
     protected $terreinobjecten;
 
     /**
+     * postkanton
+     *
+     * @var Postkanton
+     */
+    protected $postkanton;
+
+    /**
      * gateway
      *
      * @var CrabGateway
@@ -71,6 +78,7 @@ class Huisnummer
         $this->straat = $straat;
         $this->huisnummer = $huisnummer;
         $this->terreinobjecten = null;
+        $this->postkanton = null;
     }
 
     /**
@@ -138,5 +146,19 @@ class Huisnummer
             $this->checkGateway( );
             $this->terreinobjecten = $this->gateway->listTerreinobjectenByHuisnummer( $this );
         }
+    }
+
+    /**
+     * getPostkanton
+     *
+     * @return Postkanton
+     */
+    public function getPostkanton( )
+    {
+        if ( $this->postkanton === null ) {
+            $this->checkGateway( );
+            $this->postkanton = $this->gateway->getPostkantonByHuisnummer( $this );
+        }
+        return $this->postkanton;
     }
 }

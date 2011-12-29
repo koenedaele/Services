@@ -423,6 +423,24 @@ class CrabGateway
     }
 
     /**
+     * getPostkantonByHuisnummer
+     *
+     * @param  Huisnummer $huisnummer
+     * @return Postkanton
+     */
+    public function getPostkantonByHuisnummer( Huisnummer $huisnummer )
+    {
+        $p = new \StdClass();
+        $p->HuisnummerId = (int) $huisnummer->getId( );
+        $pWrapper = new \SoapParam ( $p , "GetPostkantonByHuisnummerId" );
+        $resultaat = $this->client->GetPostkantonByHuisnummerId( $pWrapper );
+        $postkanton = $resultaat->GetPostkantonByHuisnummerIdResult;
+        $pk = new Postkanton( $postkanton->PostkantonId,
+                              $postkanton->PostkantonCode );
+        return $pk;
+    }
+
+    /**
      * getTerreinobjectById
      *
      * @param  string        $id
