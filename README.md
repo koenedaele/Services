@@ -38,34 +38,40 @@ Dit commando zal een map build/reports/coverage aanmaken waar je kunt zie welke 
 
 Aanmaken van de Gateway.
 
-	$wsdl = 'http://ws.agiv.be/capakeyws/nodataset.asmx?WSDL';
-	$client = new SoapClient( $wsdl,
-									array( 'trace' => 1,
-										   'exceptions' => 1,
-										   'features' => SOAP_SINGLE_ELEMENT_ARRAYS ) );
-	$client->setAuthentication( $gebruiker, $wachtwoord );
-	$gateway = new CaPaKeyGateway( $this->client );
+```php
+$wsdl = 'http://ws.agiv.be/capakeyws/nodataset.asmx?WSDL';
+$client = new SoapClient( $wsdl,
+								array( 'trace' => 1,
+									   'exceptions' => 1,
+									   'features' => SOAP_SINGLE_ELEMENT_ARRAYS ) );
+$client->setAuthentication( $gebruiker, $wachtwoord );
+$gateway = new CaPaKeyGateway( $this->client );
+```
 
 Afdalen tot een perceel.
 
-	$gemeenten = $gateway->listGemeenten( );
-	$gemeente = $gemeenten[0];
-	$afdelingen = $gateway->listKadastraleAfdelingenByGemeente( $gemeente );
-	$afdeling = $afdelingen[0];
-	$secties = $gateway->listSectiesByAfdeling( $afdeling );
-	$sectie = $secties[0];
-	$percelen = $gateway->listPercelenBySectie( $sectie );
-	$perceel = $percelen[0];
-	echo $perceel->getCaPaKey();
+```php
+$gemeenten = $gateway->listGemeenten( );
+$gemeente = $gemeenten[0];
+$afdelingen = $gateway->listKadastraleAfdelingenByGemeente( $gemeente );
+$afdeling = $afdelingen[0];
+$secties = $gateway->listSectiesByAfdeling( $afdeling );
+$sectie = $secties[0];
+$percelen = $gateway->listPercelenBySectie( $sectie );
+$perceel = $percelen[0];
+echo $perceel->getCaPaKey();
+```
 
 Rechtstreeks informatie over een perceel ophalen op basis van de CaPaKey
 
-	$capakey = '40613A1154/02C000';
-	$perceel = $gateway->getPerceelByCaPaKey( $capakey );
-	echo 'Gemeente: ' . $perceel->getSectie()->getAfdeling()->getGemeente()->getNaam() . "\n";
-	echo 'Afdeling: ' . $perceel->getSectie()->getAfdeling()->getNaam() . "\n";
-	echo 'Sectie: ' . $perceel->getSectie()->getId() . "\n";
-	echo 'Perceelsnummer: ' . $perceel->getId() . "\n";
+```php
+$capakey = '40613A1154/02C000';
+$perceel = $gateway->getPerceelByCaPaKey( $capakey );
+echo 'Gemeente: ' . $perceel->getSectie()->getAfdeling()->getGemeente()->getNaam() . "\n";
+echo 'Afdeling: ' . $perceel->getSectie()->getAfdeling()->getNaam() . "\n";
+echo 'Sectie: ' . $perceel->getSectie()->getId() . "\n";
+echo 'Perceelsnummer: ' . $perceel->getId() . "\n";
+```
 
 ## CRAB Gateway
 
@@ -73,10 +79,12 @@ Rechtstreeks informatie over een perceel ophalen op basis van de CaPaKey
 
 Aanmaken van de Gateway.
 
-	$wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
-	$client = new SoapClient( $wsdl,
-									array( 'trace' => 1,
-										   'exceptions' => 1,
-										   'features' => SOAP_SINGLE_ELEMENT_ARRAYS ) );
-	$client->setAuthentication( $gebruiker, $wachtwoord );
-	$gateway = new CrabGateway( $this->client );
+```php
+$wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
+$client = new SoapClient( $wsdl,
+								array( 'trace' => 1,
+									   'exceptions' => 1,
+									   'features' => SOAP_SINGLE_ELEMENT_ARRAYS ) );
+$client->setAuthentication( $gebruiker, $wachtwoord );
+$gateway = new CrabGateway( $this->client );
+```
