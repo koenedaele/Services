@@ -98,7 +98,9 @@ class Wegobject
     private function checkGateway()
     {
         if ( !$this->gateway instanceof CrabGateway ) {
-            throw new \LogicException ( 'Er is geen gateway ingesteld om extra info op te vragen.' );
+            throw new \LogicException (
+                'Er is geen gateway ingesteld om extra info op te vragen.'
+            );
         }
     }
 

@@ -2,7 +2,7 @@
 /**
  * @package   KVD.Services.Agiv.CaPaKey
  * @copyright 2011 Koen Van Daele <koen_van_daele@telenet.be>
- * @author    Koen Van Daele <koen_van_daele@telenet.be> 
+ * @author    Koen Van Daele <koen_van_daele@telenet.be>
  * @license   http://www.osor.eu/eupl The European Union Public Licence
  */
 
@@ -11,27 +11,27 @@ namespace KVD\Services\Agiv\CaPaKey;
 use KVD\Services\Agiv as A;
 
 /**
- * Gateway op de CaPaKey webservice. 
- * 
+ * Gateway op de CaPaKey webservice.
+ *
  * @package   KVD.Services.Agiv.CaPaKey
  * @since     0.1.0
  * @copyright 2011 Koen Van Daele <koen_van_daele@telenet.be>
- * @author    Koen Van Daele <koen_van_daele@telenet.be> 
+ * @author    Koen Van Daele <koen_van_daele@telenet.be>
  * @license   http://www.osor.eu/eupl The European Union Public Licence
  */
 class CaPaKeyGateway
 {
     /**
-     * client 
-     * 
+     * client
+     *
      * @var KVD\Services\Agiv\CaPaKey\SoapClient
      */
     protected $client;
 
     /**
-     * __construct 
-     * 
-     * @param SoapClient $client 
+     * __construct
+     *
+     * @param SoapClient $client
      * @return void
      */
     public function __construct( SoapClient $client )
@@ -48,8 +48,8 @@ class CaPaKeyGateway
     public function listGemeenten( $volgorde = 1 )
     {
         $p = new \StdClass();
-        $p->SorteerVeld = $volgorde; 
-        $pWrapper = new \SoapParam ( $p , "ListAdmGemeenten" );
+        $p->SorteerVeld = $volgorde;
+        $pWrapper = new \SoapParam ( $p, "ListAdmGemeenten" );
         $resultaat = $this->client->ListAdmGemeenten( $pWrapper );
         $gemeentes = $resultaat->ListAdmGemeentenResult->AdmGemeenteItem;
         $res = array( );
@@ -62,36 +62,40 @@ class CaPaKeyGateway
     }
 
     /**
-     * getGemeenteById 
-     * 
-     * @param integer $id 
+     * getGemeenteById
+     *
+     * @param integer $id
      * @return KVD\Services\Agiv\CaPaKey\Gemeente
      */
     public function getGemeenteById( $id )
     {
         $p = new \StdClass();
-        $p->Niscode = $id; 
-        $pWrapper = new \SoapParam ( $p , "GetAdmGemeenteByNiscode" );
+        $p->Niscode = $id;
+        $pWrapper = new \SoapParam ( $p, "GetAdmGemeenteByNiscode" );
         $resultaat = $this->client->GetAdmGemeenteByNiscode( $pWrapper );
         $gem = $resultaat->GetAdmGemeenteByNiscodeResult;
-        $gemeente = new Gemeente( $gem->Niscode, 
-                                  $gem->AdmGemeentenaam, 
-                                  new A\Centroid( $gem->CenterX, $gem->CenterY),
-                                  new A\BoundingBox( $gem->MinimumX, $gem->MinimumY, $gem->MaximumX, $gem->MaximumY ) );
+        $gemeente = new Gemeente( $gem->Niscode,
+                                  $gem->AdmGemeentenaam,
+                                  new A\Centroid( $gem->CenterX,
+                                                  $gem->CenterY),
+                                  new A\BoundingBox( $gem->MinimumX,
+                                                     $gem->MinimumY,
+                                                     $gem->MaximumX,
+                                                     $gem->MaximumY ) );
         return $gemeente;
     }
 
     /**
-     * listKadastraleAfdelingen 
-     * 
-     * @param int $volgorde 
+     * listKadastraleAfdelingen
+     *
+     * @param int $volgorde
      * @return array
      */
     public function listKadastraleAfdelingen( $volgorde = 1  )
     {
         $p = new \StdClass();
-        $p->SorteerVeld = $volgorde; 
-        $pWrapper = new \SoapParam ( $p , "ListKadAfdelingen" );
+        $p->SorteerVeld = $volgorde;
+        $pWrapper = new \SoapParam ( $p, "ListKadAfdelingen" );
         $resultaat = $this->client->ListKadAfdelingen( $pWrapper );
         $afdelingen = $resultaat->ListKadAfdelingenResult->KadAfdelingItem;
         $res = array( );
@@ -116,8 +120,8 @@ class CaPaKeyGateway
     {
         $p = new \StdClass();
         $p->Niscode = $gemeente->getId( );
-        $p->SorteerVeld = $volgorde; 
-        $pWrapper = new \SoapParam ( $p , "ListKadAfdelingenByNiscode" );
+        $p->SorteerVeld = $volgorde;
+        $pWrapper = new \SoapParam ( $p, "ListKadAfdelingenByNiscode" );
         $resultaat = $this->client->ListKadAfdelingenByNiscode( $pWrapper );
         $afdelingen = $resultaat->ListKadAfdelingenByNiscodeResult->KadAfdelingItem;
         $res = array( );
@@ -139,7 +143,7 @@ class CaPaKeyGateway
     {
         $p = new \StdClass();
         $p->KadAfdelingcode = $id;
-        $pWrapper = new \SoapParam ( $p , "GetKadAfdelingByKadAfdelingcode" );
+        $pWrapper = new \SoapParam ( $p, "GetKadAfdelingByKadAfdelingcode" );
         $resultaat = $this->client->GetKadAfdelingByKadAfdelingcode( $pWrapper );
         $afd = $resultaat->GetKadAfdelingByKadAfdelingcodeResult;
         $g = new Gemeente( $afd->Niscode );
@@ -161,7 +165,7 @@ class CaPaKeyGateway
     {
         $p = new \StdClass();
         $p->KadAfdelingcode = $afdeling->getId( );
-        $pWrapper = new \SoapParam ( $p , "ListKadSectiesByKadAfdelingcode" );
+        $pWrapper = new \SoapParam ( $p, "ListKadSectiesByKadAfdelingcode" );
         $resultaat = $this->client->ListKadSectiesByKadAfdelingcode( $pWrapper );
         $secties = $resultaat->ListKadSectiesByKadAfdelingcodeResult->KadSectieItem;
         $res = array( );
@@ -185,7 +189,7 @@ class CaPaKeyGateway
         $p = new \StdClass();
         $p->KadAfdelingcode = $afdeling->getId( );
         $p->KadSectieCode = $id;
-        $pWrapper = new \SoapParam ( $p , "GetKadSectieByKadSectiecode" );
+        $pWrapper = new \SoapParam ( $p, "GetKadSectieByKadSectiecode" );
         $resultaat = $this->client->GetKadSectieByKadSectiecode( $pWrapper );
         $sec = $resultaat->GetKadSectieByKadSectiecodeResult;
         $centroid = new A\Centroid( $sec->CenterX, $sec->CenterY );
@@ -207,7 +211,7 @@ class CaPaKeyGateway
         $p->KadAfdelingcode = $sectie->getAfdeling( )->getId( );
         $p->KadSectieCode = $sectie->getId( );
         $p->SorteerVeld = $volgorde;
-        $pWrapper = new \SoapParam ( $p , "ListKadPerceelsnummersByKadSectiecode" );
+        $pWrapper = new \SoapParam ( $p, "ListKadPerceelsnummersByKadSectiecode" );
         $resultaat = $this->client->ListKadPerceelsnummersByKadSectiecode( $pWrapper );
         $percelen = $resultaat->ListKadPerceelsnummersByKadSectiecodeResult->KadPerceelsnummerItem;
         $res = array( );
@@ -220,10 +224,10 @@ class CaPaKeyGateway
     }
 
     /**
-     * getPerceelByIdAndSectie 
-     * 
-     * @param string $id 
-     * @param Sectie $sectie 
+     * getPerceelByIdAndSectie
+     *
+     * @param string $id
+     * @param Sectie $sectie
      * @return Perceel
      */
     public function getPerceelByIdAndSectie( $id, Sectie $sectie )
@@ -232,60 +236,72 @@ class CaPaKeyGateway
         $p->KadAfdelingcode = $sectie->getAfdeling( )->getId( );
         $p->KadSectieCode = $sectie->getId( );
         $p->KadPerceelsnummer = $id;
-        $pWrapper = new \SoapParam ( $p , "GetKadPerceelsnummerByKadPerceelsnummer" );
+        $pWrapper = new \SoapParam ( $p, "GetKadPerceelsnummerByKadPerceelsnummer" );
         $resultaat = $this->client->GetKadPerceelsnummerByKadPerceelsnummer( $pWrapper );
         $perc = $resultaat->GetKadPerceelsnummerByKadPerceelsnummerResult;
-        $p = new Perceel( $perc->KadPerceelsnummer, $sectie, 
+        $p = new Perceel( $perc->KadPerceelsnummer, $sectie,
                           $perc->CaPaKey, $perc->PERCID,
                           $perc->CaPaTy, $perc->CaShKey,
-                          new A\Centroid( $perc->CenterX, $perc->CenterY ),
-                          new A\BoundingBox( $perc->MinimumX, $perc->MinimumY, $perc->MaximumX, $perc->MaximumY ) );
+                          new A\Centroid( $perc->CenterX,
+                                          $perc->CenterY ),
+                          new A\BoundingBox( $perc->MinimumX,
+                                             $perc->MinimumY,
+                                             $perc->MaximumX,
+                                             $perc->MaximumY ) );
         return $p;
     }
 
     /**
-     * getPerceelByCaPaKey 
-     * 
-     * @param string $capakey 
+     * getPerceelByCaPaKey
+     *
+     * @param string $capakey
      * @return Perceel
      */
     public function getPerceelByCaPaKey( $capakey )
     {
         $p = new \StdClass();
         $p->CaPaKey = $capakey;
-        $pWrapper = new \SoapParam ( $p , "GetKadPerceelsnummerByCaPaKey" );
+        $pWrapper = new \SoapParam ( $p, "GetKadPerceelsnummerByCaPaKey" );
         $resultaat = $this->client->GetKadPerceelsnummerByCaPaKey( $pWrapper );
         $perc = $resultaat->GetKadPerceelsnummerByCaPaKeyResult;
         $afdeling = $this->getKadastraleAfdelingById( $perc->KadAfdelingcode );
         $sectie = new Sectie( $perc->KadSectiecode, $afdeling);
-        $p = new Perceel( $perc->KadPerceelsnummer, $sectie, 
+        $p = new Perceel( $perc->KadPerceelsnummer, $sectie,
                           $perc->CaPaKey, $perc->PERCID,
                           $perc->CaPaTy, $perc->CaShKey,
-                          new A\Centroid( $perc->CenterX, $perc->CenterY ),
-                          new A\BoundingBox( $perc->MinimumX, $perc->MinimumY, $perc->MaximumX, $perc->MaximumY ) );
+                          new A\Centroid( $perc->CenterX,
+                                          $perc->CenterY ),
+                          new A\BoundingBox( $perc->MinimumX,
+                                             $perc->MinimumY,
+                                             $perc->MaximumX,
+                                             $perc->MaximumY ) );
         return $p;
     }
 
     /**
-     * getPerceelByPercid 
-     * 
-     * @param string $percid 
+     * getPerceelByPercid
+     *
+     * @param string $percid
      * @return Perceel
      */
     public function getPerceelByPercid( $percid )
     {
         $p = new \StdClass();
         $p->PERCID = $percid;
-        $pWrapper = new \SoapParam ( $p , "GetKadPerceelsnummerByPERCID" );
+        $pWrapper = new \SoapParam ( $p, "GetKadPerceelsnummerByPERCID" );
         $resultaat = $this->client->GetKadPerceelsnummerByPERCID( $pWrapper );
         $perc = $resultaat->GetKadPerceelsnummerByPERCIDResult;
         $afdeling = $this->getKadastraleAfdelingById( $perc->KadAfdelingcode );
         $sectie = new Sectie( $perc->KadSectiecode, $afdeling);
-        $p = new Perceel( $perc->KadPerceelsnummer, $sectie, 
+        $p = new Perceel( $perc->KadPerceelsnummer, $sectie,
                           $perc->CaPaKey, $perc->PERCID,
                           $perc->CaPaTy, $perc->CaShKey,
-                          new A\Centroid( $perc->CenterX, $perc->CenterY ),
-                          new A\BoundingBox( $perc->MinimumX, $perc->MinimumY, $perc->MaximumX, $perc->MaximumY ) );
+                          new A\Centroid( $perc->CenterX,
+                                          $perc->CenterY ),
+                          new A\BoundingBox( $perc->MinimumX,
+                                             $perc->MinimumY,
+                                             $perc->MaximumX,
+                                             $perc->MaximumY ) );
         return $p;
     }
 }

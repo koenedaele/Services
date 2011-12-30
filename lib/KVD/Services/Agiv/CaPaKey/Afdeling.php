@@ -64,16 +64,20 @@ class Afdeling
     protected $gateway;
 
     /**
-     * __construct 
-     * 
-     * @param integer $id 
-     * @param string $naam 
-     * @param Gemeente $gemeente 
-     * @param A\Centroid $centroid 
-     * @param A\BoundingBox $box 
+     * __construct
+     *
+     * @param integer $id
+     * @param string $naam
+     * @param Gemeente $gemeente
+     * @param A\Centroid $centroid
+     * @param A\BoundingBox $box
      * @return void
      */
-    public function __construct( $id, $naam, Gemeente $gemeente, A\Centroid $centroid = null, A\BoundingBox $box = null )
+    public function __construct( $id,
+                                 $naam,
+                                 Gemeente $gemeente,
+                                 A\Centroid $centroid = null,
+                                 A\BoundingBox $box = null )
     {
         $this->id = $id;
         $this->naam = $naam;
@@ -96,7 +100,9 @@ class Afdeling
     protected function checkGateway()
     {
         if ( !$this->gateway instanceof CaPaKeyGateway ) {
-            throw new \LogicException ( 'Er is geen gateway ingesteld om extra info op te vragen.' );
+            throw new \LogicException (
+                'Er is geen gateway ingesteld om extra info op te vragen.'
+            );
         }
     }
 

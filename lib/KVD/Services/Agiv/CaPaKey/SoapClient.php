@@ -77,7 +77,7 @@ class SoapClient extends \SoapClient
 
         $wsse = new \WSSESoap( $dom );
 
-        $wsse->addUserToken( $this->user, $this->password, TRUE );
+        $wsse->addUserToken( $this->user, $this->password, true );
 
         $req = $wsse->saveXML( );
 

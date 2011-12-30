@@ -65,7 +65,10 @@ class Sectie
      * @param A\BoundingBox $box 
      * @return void
      */
-    public function __construct( $id, Afdeling $afdeling, A\Centroid $centroid = null, A\BoundingBox $box = null)
+    public function __construct( $id,
+                                 Afdeling $afdeling,
+                                 A\Centroid $centroid = null,
+                                 A\BoundingBox $box = null)
     {
         $this->id = $id;
         $this->afdeling = $afdeling;
@@ -87,7 +90,9 @@ class Sectie
     protected function checkGateway()
     {
         if ( !$this->gateway instanceof CaPaKeyGateway ) {
-            throw new \LogicException ( 'Er is geen gateway ingesteld om extra info op te vragen.' );
+            throw new \LogicException (
+                'Er is geen gateway ingesteld om extra info op te vragen.'
+            );
         }
     }
 

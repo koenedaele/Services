@@ -84,7 +84,7 @@ class CrabGateway
         $organisaties = $resultaat->ListOrganisatiesResult->CodeItem;
         $res = array( );
         foreach ( $organisaties as $organisatie ) {
-            $b = new Organisatie( $organisatie->Code, $organisatie->Naam, $organisatie->Definitie );
+            $b = new Organisatie($organisatie->Code, $organisatie->Naam, $organisatie->Definitie );
             $res[] = $b;
         }
         return $res;
@@ -101,7 +101,7 @@ class CrabGateway
         $aarden = $resultaat->ListAardSubadressenResult->CodeItem;
         $res = array( );
         foreach ( $aarden as $aard ) {
-            $a = new AardSubadres( $aard->Code, $aard->Naam, $aard->Definitie );
+            $a = new AardSubadres($aard->Code, $aard->Naam, $aard->Definitie );
             $res[] = $a;
         }
         return $res;
@@ -118,7 +118,7 @@ class CrabGateway
         $aarden = $resultaat->ListAardTerreinobjectenResult->CodeItem;
         $res = array( );
         foreach ( $aarden as $aard ) {
-            $a = new AardTerreinobject( $aard->Code, $aard->Naam, $aard->Definitie );
+            $a = new AardTerreinobject($aard->Code, $aard->Naam, $aard->Definitie );
             $res[] = $a;
         }
         return $res;
@@ -135,15 +135,15 @@ class CrabGateway
         $aarden = $resultaat->ListAardWegobjectenResult->CodeItem;
         $res = array( );
         foreach ( $aarden as $aard ) {
-            $a = new AardWegobject( $aard->Code, $aard->Naam, $aard->Definitie );
+            $a = new AardWegobject($aard->Code, $aard->Naam, $aard->Definitie );
             $res[] = $a;
         }
         return $res;
     }
     /**
-     * listGemeenten 
-     * 
-     * @param int $volgorde 
+     * listGemeenten
+     *
+     * @param int $volgorde
      * @return array
      */
     public function listGemeentenByGewestId( $gewestId = 2, $volgorde = 1 )
@@ -151,7 +151,7 @@ class CrabGateway
         $p = new \StdClass();
         $p->GewestId = $gewestId;
         $p->SorteerVeld = $volgorde; 
-        $pWrapper = new \SoapParam ( $p , "ListGemeentenByGewestId" );
+        $pWrapper = new \SoapParam ( $p, "ListGemeentenByGewestId" );
         $resultaat = $this->client->ListGemeentenByGewestId( $pWrapper );
         $gemeentes = $resultaat->ListGemeentenByGewestIdResult->GemeenteItem;
         $res = array( );
@@ -179,15 +179,19 @@ class CrabGateway
     {
         $p = new \StdClass();
         $p->NISGemeenteCode = $nisCode;
-        $pWrapper = new \SoapParam ( $p , "GetGemeenteByNISGemeenteCode" );
+        $pWrapper = new \SoapParam ( $p, "GetGemeenteByNISGemeenteCode" );
         $resultaat = $this->client->GetGemeenteByNISGemeenteCode( $pWrapper );
         $gem = $resultaat->GetGemeenteByNISGemeenteCodeResult;
         $gemeente = new Gemeente( $gem->GemeenteId, $gem->NisGemeenteCode,
                                   array( $gem->TaalCodeGemeenteNaam =>
                                          $gem->GemeenteNaam),
                                   $gem->TaalCode, null,
-                                  new A\Centroid( $gem->CenterX, $gem->CenterY),
-                                  new A\BoundingBox( $gem->MinimumX, $gem->MinimumY, $gem->MaximumX, $gem->MaximumY ) );
+                                  new A\Centroid( $gem->CenterX,
+                                                  $gem->CenterY),
+                                  new A\BoundingBox( $gem->MinimumX,
+                                                     $gem->MinimumY,
+                                                     $gem->MaximumX,
+                                                     $gem->MaximumY ) );
         return $gemeente;
     }
 
@@ -201,15 +205,19 @@ class CrabGateway
     {
         $p = new \StdClass();
         $p->GemeenteId = $id;
-        $pWrapper = new \SoapParam ( $p , "GetGemeenteByGemeenteId" );
+        $pWrapper = new \SoapParam ( $p, "GetGemeenteByGemeenteId" );
         $resultaat = $this->client->GetGemeenteByGemeenteId( $pWrapper );
         $gem = $resultaat->GetGemeenteByGemeenteIdResult;
         $gemeente = new Gemeente( $gem->GemeenteId, $gem->NisGemeenteCode,
                                   array( $gem->TaalCodeGemeenteNaam =>
                                          $gem->GemeenteNaam),
                                   $gem->TaalCode, null,
-                                  new A\Centroid( $gem->CenterX, $gem->CenterY),
-                                  new A\BoundingBox( $gem->MinimumX, $gem->MinimumY, $gem->MaximumX, $gem->MaximumY ) );
+                                  new A\Centroid( $gem->CenterX,
+                                                  $gem->CenterY),
+                                  new A\BoundingBox( $gem->MinimumX,
+                                                     $gem->MinimumY,
+                                                     $gem->MaximumX,
+                                                     $gem->MaximumY ) );
         return $gemeente;
     }
 
@@ -224,15 +232,19 @@ class CrabGateway
         $p = new \StdClass();
         $p->GemeenteNaam = $naam;
         $p->GewestId = $gewestId;
-        $pWrapper = new \SoapParam ( $p , "GetGemeenteByGemeenteNaam" );
+        $pWrapper = new \SoapParam ( $p, "GetGemeenteByGemeenteNaam" );
         $resultaat = $this->client->GetGemeenteByGemeenteNaam( $pWrapper );
         $gem = $resultaat->GetGemeenteByGemeenteNaamResult;
         $gemeente = new Gemeente( $gem->GemeenteId, $gem->NisGemeenteCode,
                                   array( $gem->TaalCodeGemeenteNaam =>
                                          $gem->GemeenteNaam),
                                   $gem->TaalCode, null,
-                                  new A\Centroid( $gem->CenterX, $gem->CenterY),
-                                  new A\BoundingBox( $gem->MinimumX, $gem->MinimumY, $gem->MaximumX, $gem->MaximumY ) );
+                                  new A\Centroid( $gem->CenterX,
+                                                  $gem->CenterY),
+                                  new A\BoundingBox( $gem->MinimumX,
+                                                     $gem->MinimumY,
+                                                     $gem->MaximumX,
+                                                     $gem->MaximumY ) );
         return $gemeente;
     }
 
@@ -247,7 +259,7 @@ class CrabGateway
         $p = new \StdClass();
         $p->GemeenteId = $gemeente->getId( );
         $p->SorteerVeld = 6;
-        $pWrapper = new \SoapParam ( $p , "ListStraatnamenByGemeenteId" );
+        $pWrapper = new \SoapParam ( $p, "ListStraatnamenByGemeenteId" );
         $resultaat = $this->client->ListStraatnamenByGemeenteId( $pWrapper );
         $straten = $resultaat->ListStraatnamenByGemeenteIdResult->StraatnaamItem;
         $res = array( );
@@ -281,7 +293,7 @@ class CrabGateway
     {
         $p = new \StdClass( );
         $p->StraatnaamId = $id;
-        $pWrapper = new \SoapParam ( $p , "GetStraatnaamByStraatnaamId" );
+        $pWrapper = new \SoapParam ( $p, "GetStraatnaamByStraatnaamId" );
         $resultaat = $this->client->GetStraatnaamByStraatnaamId( $pWrapper );
         $str = $resultaat->GetStraatnaamByStraatnaamIdResult;
         $namen = array( );
@@ -309,7 +321,7 @@ class CrabGateway
         $p = new \StdClass();
         $p->StraatnaamId = $straat->getId( );
         $p->SorteerVeld = 1;
-        $pWrapper = new \SoapParam ( $p , "ListWebobjectenByStraatnaamId" );
+        $pWrapper = new \SoapParam ( $p, "ListWebobjectenByStraatnaamId" );
         $resultaat = $this->client->ListWegobjectenByStraatnaamId( $pWrapper );
         $wegobjecten = $resultaat->ListWegobjectenByStraatnaamIdResult->WegobjectItem;
         $res = array( );
@@ -333,7 +345,7 @@ class CrabGateway
     {
         $p = new \StdClass( );
         $p->IdentificatorWegobject = $id;
-        $pWrapper = new \SoapParam ( $p , "GetWegobjectByIdentificatorWegobject" );
+        $pWrapper = new \SoapParam ( $p, "GetWegobjectByIdentificatorWegobject" );
         $resultaat = $this->client->GetWegobjectByIdentificatorWegobject( $pWrapper );
         $wegobj = $resultaat->GetWegobjectByIdentificatorWegobjectResult;
         $wo = new Wegobject( $wegobj->IdentificatorWegobject, $straat,
@@ -359,7 +371,7 @@ class CrabGateway
         $p = new \StdClass();
         $p->StraatnaamId = $straat->getId( );
         $p->SorteerVeld = 2;
-        $pWrapper = new \SoapParam ( $p , "ListHuisnummersByStraatnaamId" );
+        $pWrapper = new \SoapParam ( $p, "ListHuisnummersByStraatnaamId" );
         $resultaat = $this->client->ListHuisnummersByStraatnaamId( $pWrapper );
         $huisnummers = $resultaat->ListHuisnummersByStraatnaamIdResult->HuisnummerItem;
         $res = array( );
@@ -383,9 +395,10 @@ class CrabGateway
         $p = new \StdClass();
         $p->IdentificatorTerreinobject = $terreinobject->getId( );
         $p->SorteerVeld = 2;
-        $pWrapper = new \SoapParam ( $p , "ListHuisnummersByIdentificatorTerreinobject" );
+        $pWrapper = new \SoapParam ( $p, "ListHuisnummersByIdentificatorTerreinobject" );
         $resultaat = $this->client->ListHuisnummersByIdentificatorTerreinobject( $pWrapper );
-        $huisnummers = $resultaat->ListHuisnummersByIdentificatorTerreinobjectResult->HuisnummerItem;
+        $huisnummers = $resultaat->ListHuisnummersByIdentificatorTerreinobjectResult
+                                 ->HuisnummerItem;
         $res = array( );
         foreach ( $huisnummers as $hnr ) {
             $h = new Huisnummer( $hnr->HuisnummerId, null,
@@ -407,11 +420,12 @@ class CrabGateway
         $p = new \StdClass();
         $p->HuisnummerId = $huisnummer->getId( );
         $p->SorteerVeld = 1;
-        $pWrapper = new \SoapParam ( $p , "ListTerreinobjectenByHuisnummerId" );
+        $pWrapper = new \SoapParam ( $p, "ListTerreinobjectenByHuisnummerId" );
         $resultaat = $this->client->ListTerreinobjectenByHuisnummerId( $pWrapper );
         $res = array( );
         if ( isset( $resultaat->ListTerreinobjectenByHuisnummerIdResult->TerreinobjectItem ) ) {
-            $terreinobjecten = $resultaat->ListTerreinobjectenByHuisnummerIdResult->TerreinobjectItem;
+            $terreinobjecten = $resultaat->ListTerreinobjectenByHuisnummerIdResult
+                                         ->TerreinobjectItem;
             foreach ( $terreinobjecten as $terobj ) {
                 $to = new Terreinobject( $terobj->IdentificatorTerreinobject,
                                          $terobj->AardTerreinobject );
@@ -432,7 +446,7 @@ class CrabGateway
     {
         $p = new \StdClass();
         $p->HuisnummerId = (int) $huisnummer->getId( );
-        $pWrapper = new \SoapParam ( $p , "GetPostkantonByHuisnummerId" );
+        $pWrapper = new \SoapParam ( $p, "GetPostkantonByHuisnummerId" );
         $resultaat = $this->client->GetPostkantonByHuisnummerId( $pWrapper );
         $postkanton = $resultaat->GetPostkantonByHuisnummerIdResult;
         $pk = new Postkanton( $postkanton->PostkantonId,
