@@ -111,7 +111,7 @@
 	<target name="genCodeSnifferReports" description="Maak rapporten over de staat van de code aan." depends="createBuildDir">
 		<delete dir="build/reports/sniffs" />
 		<mkdir dir="build/reports/sniffs" />
-		<exec command="phpcs --standard=PEAR ${project.basedir}/classes 
+		<exec command="phpcs --standard=${project.basedir}/dev/phpcs/VIOE ${project.basedir}/lib
 			--report-summary --report-full=${project.basedir}/build/reports/sniffs/sniffs.txt
 			--report-checkstyle=${project.basedir}/build/reports/sniffs/checkstyle.xml" />
 	</target>
