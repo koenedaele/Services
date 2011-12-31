@@ -40,10 +40,7 @@ Aanmaken van de Gateway.
 
 ```php
 $wsdl = 'http://ws.agiv.be/capakeyws/nodataset.asmx?WSDL';
-$client = new SoapClient( $wsdl,
-								array( 'trace' => 1,
-									   'exceptions' => 1,
-									   'features' => SOAP_SINGLE_ELEMENT_ARRAYS ) );
+$client = new SoapClient( $wsdl, array( 'trace' => 1 ) );
 $client->setAuthentication( $gebruiker, $wachtwoord );
 $gateway = new CaPaKeyGateway( $this->client );
 ```
@@ -81,10 +78,7 @@ Aanmaken van de Gateway.
 
 ```php
 $wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
-$client = new SoapClient( $wsdl,
-								array( 'trace' => 1,
-									   'exceptions' => 1,
-									   'features' => SOAP_SINGLE_ELEMENT_ARRAYS ) );
+$client = new SoapClient( $wsdl, array( 'trace' => 1 ) );
 $client->setAuthentication( $gebruiker, $wachtwoord );
 $gateway = new CrabGateway( $this->client );
 ```
