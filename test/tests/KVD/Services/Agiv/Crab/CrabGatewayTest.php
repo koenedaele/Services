@@ -114,6 +114,36 @@ class CaPaKeyGatewayTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals( 'Gemeente.', $first->getDefinitie( ) );
     }
 
+    public function testListAardSubadressen( )
+    {
+        $client = $this->getMockBuilder('KVD\Services\Agiv\Crab\SoapClient')
+                       ->disableOriginalConstructor( )
+                       ->setMethods( array( 'ListAardSubadressen') )
+                       ->getMock( );
+        $gateway = new CrabGateway( $client );
+
+        $aarden = array();
+        $a = new \StdClass( );
+        $a->Code = 1;
+        $a->Naam = 'appartement';
+        $a->Definitie = 'Nummer van een appartement.';
+        $aarden[] = $a;
+        $res = new \StdClass( );
+        $res->ListAardSubadressenResult = new \StdClass( );
+        $res->ListAardSubadressenResult->CodeItem = $aarden;
+        $client->expects( $this->once( ) )
+               ->method( 'ListAardSubadressen' )
+               ->will( $this->returnValue( $res ) );
+        $resultaat = $gateway->listAardSubadressen();
+        $this->assertInternalType( 'array', $resultaat );
+        $this->assertEquals( 1, count( $resultaat ) );
+        $first = $resultaat[0];
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\AardSubadres', $first );
+        $this->assertEquals( 1, $first->getCode( ) );
+        $this->assertEquals( 'appartement', $first->getNaam( ) );
+        $this->assertEquals( 'Nummer van een appartement.', $first->getDefinitie( ) );
+    }
+
     public function testListGemeentenByGewestId( )
     {
         $client = $this->getMockBuilder('KVD\Services\Agiv\Crab\SoapClient')
