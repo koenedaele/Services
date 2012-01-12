@@ -22,8 +22,28 @@ namespace KVD\Services\Agiv\Crab;
  * @author     Koen Van Daele <koen_van_daele@telenet.be>
  * @license    http://www.osor.eu/eupl The European Union Public Licence
  */
-class CaPaKeyGatewayTest extends \PHPUnit_Framework_TestCase
+class CrabGatewayTest extends \PHPUnit_Framework_TestCase
 {
+    /**
+     * @return \StdClass
+     */
+    private function getTestgemeenteAsSoapResult( )
+    {
+        $gem = new \StdClass( );
+        $gem->GemeenteId = 666;
+        $gem->NisGemeenteCode = 39999;
+        $gem->GemeenteNaam = 'TestGemeente';
+        $gem->TaalCodeGemeenteNaam = 'nl';
+        $gem->TaalCode = 'nl';
+        $gem->CenterX = 10.0;
+        $gem->CenterY = 10.0;
+        $gem->MinimumX = 0.0;
+        $gem->MinimumY = 0.0;
+        $gem->MaximumX = 20.0;
+        $gem->MaximumY = 20.0;
+        return $gem;
+    }
+
     public function testListTalen( )
     {
         $client = $this->getMockBuilder('KVD\Services\Agiv\Crab\SoapClient')
@@ -284,20 +304,8 @@ class CaPaKeyGatewayTest extends \PHPUnit_Framework_TestCase
         $p = new \StdClass();
         $p->NISGemeenteCode = 39999; 
         $pWrapper = new \SoapParam ( $p , "GetGemeenteByNISGemeenteCode" );
-        $gem = new \StdClass( );
-        $gem->GemeenteId = 666;
-        $gem->NisGemeenteCode = 39999;
-        $gem->GemeenteNaam = 'TestGemeente';
-        $gem->TaalCodeGemeenteNaam = 'nl';
-        $gem->TaalCode = 'nl';
-        $gem->CenterX = 10.0;
-        $gem->CenterY = 10.0;
-        $gem->MinimumX = 0.0;
-        $gem->MinimumY = 0.0;
-        $gem->MaximumX = 20.0;
-        $gem->MaximumY = 20.0;
         $res = new \StdClass( );
-        $res->GetGemeenteByNISGemeenteCodeResult = $gem;
+        $res->GetGemeenteByNISGemeenteCodeResult = $this->getTestgemeenteAsSoapResult( );
         $client->expects( $this->once( ) )
                ->method( 'GetGemeenteByNISGemeenteCode' )
                ->with( $pWrapper )
@@ -319,20 +327,8 @@ class CaPaKeyGatewayTest extends \PHPUnit_Framework_TestCase
         $p = new \StdClass();
         $p->GemeenteId = 666; 
         $pWrapper = new \SoapParam ( $p , "GetGemeenteByGemeenteId" );
-        $gem = new \StdClass( );
-        $gem->GemeenteId = 666;
-        $gem->NisGemeenteCode = 39999;
-        $gem->GemeenteNaam = 'TestGemeente';
-        $gem->TaalCodeGemeenteNaam = 'nl';
-        $gem->TaalCode = 'nl';
-        $gem->CenterX = 10.0;
-        $gem->CenterY = 10.0;
-        $gem->MinimumX = 0.0;
-        $gem->MinimumY = 0.0;
-        $gem->MaximumX = 20.0;
-        $gem->MaximumY = 20.0;
         $res = new \StdClass( );
-        $res->GetGemeenteByGemeenteIdResult = $gem;
+        $res->GetGemeenteByGemeenteIdResult = $this->getTestgemeenteAsSoapResult( );
         $client->expects( $this->once( ) )
                ->method( 'GetGemeenteByGemeenteId' )
                ->with( $pWrapper )
@@ -355,20 +351,8 @@ class CaPaKeyGatewayTest extends \PHPUnit_Framework_TestCase
         $p->GemeenteNaam = 'TestGemeente';
         $p->GewestId = 2; 
         $pWrapper = new \SoapParam ( $p , "GetGemeenteByGemeenteNaam" );
-        $gem = new \StdClass( );
-        $gem->GemeenteId = 666;
-        $gem->NisGemeenteCode = 39999;
-        $gem->GemeenteNaam = 'TestGemeente';
-        $gem->TaalCodeGemeenteNaam = 'nl';
-        $gem->TaalCode = 'nl';
-        $gem->CenterX = 10.0;
-        $gem->CenterY = 10.0;
-        $gem->MinimumX = 0.0;
-        $gem->MinimumY = 0.0;
-        $gem->MaximumX = 20.0;
-        $gem->MaximumY = 20.0;
         $res = new \StdClass( );
-        $res->GetGemeenteByGemeenteNaamResult = $gem;
+        $res->GetGemeenteByGemeenteNaamResult = $this->getTestgemeenteAsSoapResult( );
         $client->expects( $this->once( ) )
                ->method( 'GetGemeenteByGemeenteNaam' )
                ->with( $pWrapper )
@@ -429,5 +413,125 @@ class CaPaKeyGatewayTest extends \PHPUnit_Framework_TestCase
         $second = $resultaat[1];
         $this->assertEquals( $second->getNaam( 'nl' ), $second->getNaam( 'fr' ) );
     }
+
+    public function testGetStraatById( )
+    {
+        $client = $this->getMockBuilder('KVD\Services\Agiv\Crab\SoapClient')
+                       ->disableOriginalConstructor( )
+                       ->setMethods( array( 'GetStraatnaamByStraatnaamId',
+                                            'GetGemeenteByGemeenteId') )
+                       ->getMock( );
+        $gateway = new CrabGateway( $client );
+
+        $p = new \StdClass();
+        $p->StraatnaamId = 456;
+        $pWrapper = new \SoapParam ( $p , "GetStraatnaamByStraatnaamId" );
+        $ts = new \StdClass( );
+        $ts->GemeenteId = 666;
+        $ts->StraatnaamId = 456;
+        $ts->StraatnaamLabel = 'Teststraat';
+        $ts->TaalCode = 'nl';
+        $ts->Straatnaam = 'Teststraat';
+        $ts->TaalCodeTweedeTaal = 'fr';
+        $ts->StraatnaamTweedeTaal = 'Rue du Test';
+        $res = new \StdClass( );
+        $res->GetStraatnaamByStraatnaamIdResult = $ts;
+        $client->expects( $this->once( ) )
+               ->method( 'GetStraatnaamByStraatnaamId' )
+               ->with( $pWrapper )
+               ->will( $this->returnValue( $res ) );
+
+        $p = new \StdClass();
+        $p->GemeenteId = 666; 
+        $pWrapper = new \SoapParam ( $p , "GetGemeenteByGemeenteId" );
+        $res = new \StdClass( );
+        $res->GetGemeenteByGemeenteIdResult = $this->getTestgemeenteAsSoapResult( );
+        $client->expects( $this->once( ) )
+               ->method( 'GetGemeenteByGemeenteId' )
+               ->with( $pWrapper )
+               ->will( $this->returnValue( $res ) );
+
+        $resultaat = $gateway->getStraatById( 456 );
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Straat', $resultaat );
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Gemeente', $resultaat->getGemeente( ) );
+        $this->assertEquals( 456, $resultaat->getId( ) );
+        $this->assertEquals( 666, $resultaat->getGemeente( )->getId( ) );
+        $this->assertEquals( 'TestGemeente', $resultaat->getGemeente( )->getNaam( ) );
+        $this->assertEquals( 'Teststraat', $resultaat->getNaam( ) );
+        $this->assertEquals( 'Rue du Test', $resultaat->getNaam( 'fr' ) );
+    }
+
+    public function testListHuisnummersByStraat( )
+    {
+        $client = $this->getMockBuilder('KVD\Services\Agiv\Crab\SoapClient')
+                       ->disableOriginalConstructor( )
+                       ->setMethods( array( 'ListHuisnummersByStraatnaamId') )
+                       ->getMock( );
+        $gateway = new CrabGateway( $client );
+
+        $p = new \StdClass();
+        $p->StraatnaamId = 456;
+        $p->SorteerVeld = 2; 
+        $pWrapper = new \SoapParam ( $p , "ListHuisnummersByStraatnaamId" );
+        $hnrs = array();
+        $th = new \StdClass( );
+        $th->HuisnummerId = 456789;
+        $th->Huisnummer = '68';
+        $hnrs[] = $th;
+        $res = new \StdClass( );
+        $res->ListHuisnummersByStraatnaamIdResult = new \StdClass( );
+        $res->ListHuisnummersByStraatnaamIdResult->HuisnummerItem = $hnrs;
+        $client->expects( $this->once( ) )
+               ->method( 'ListHuisnummersByStraatnaamId' )
+               ->with( $pWrapper )
+               ->will( $this->returnValue( $res ) );
+        $gemeente = new Gemeente( 666, 39999, array( 'nl' => 'TestGemeente' ), 'nl' );
+
+        $straat = new Straat( 456, $gemeente, 'Teststraat',
+                              array( 'nl' => 'Teststraat' ), 'nl' );
+        $resultaat = $gateway->listHuisnummersByStraat( $straat );
+        $this->assertInternalType( 'array', $resultaat );
+        $this->assertEquals( 1, count( $resultaat ) );
+        $first = $resultaat[0];
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Huisnummer', $first );
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Straat', $first->getStraat( ) );
+        $this->assertEquals( 456789, $first->getId( ) );
+        $this->assertEquals( $straat->getId( ), $first->getStraat( )->getId( ) );
+    }
+
+    public function testGetPostkantonByHuisnummer( )
+    {
+        $client = $this->getMockBuilder('KVD\Services\Agiv\Crab\SoapClient')
+                       ->disableOriginalConstructor( )
+                       ->setMethods( array( 'GetPostkantonByHuisnummerId') )
+                       ->getMock( );
+        $gateway = new CrabGateway( $client );
+
+        $p = new \StdClass();
+        $p->HuisnummerId = 456789;
+        $pWrapper = new \SoapParam ( $p , "GetPostkantonByHuisnummerId" );
+
+        $res = new \StdClass( );
+        $res->GetPostkantonByHuisnummerIdResult = new \StdClass( );
+        $res->GetPostkantonByHuisnummerIdResult->PostkantonId = 1;
+        $res->GetPostkantonByHuisnummerIdResult->PostkantonCode = 9999;
+
+        $client->expects( $this->once( ) )
+               ->method( 'GetPostkantonByHuisnummerId' )
+               ->with( $pWrapper )
+               ->will( $this->returnValue( $res ) );
+
+        $gemeente = new Gemeente( 666, 39999, array( 'nl' => 'TestGemeente' ), 'nl' );
+        $straat = new Straat( 456, $gemeente, 'Teststraat',
+                              array( 'nl' => 'Teststraat' ), 'nl' );
+        $huisnummer = new Huisnummer( 456789, $straat, '68' );
+
+        $resultaat = $gateway->getPostkantonByHuisnummer( $huisnummer );
+
+        $this->assertInstanceOf( 'KVD\Services\Agiv\Crab\Postkanton', $resultaat );
+        $this->assertEquals( 1, $resultaat->getId( ) );
+        $this->assertEquals( 9999, $resultaat->getCode( ) );
+    }
+    
 }
 ?>

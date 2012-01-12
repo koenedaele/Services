@@ -299,7 +299,11 @@ class CrabGateway
         $namen = array( );
         $namen[$str->TaalCode] = $str->Straatnaam;
         if ( isset( $str->TaalCodeTweedeTaal ) ) {
-            $namen[$str->TaalCodeTweedeTaal] = $str->StraatnaamTweedeTaal;
+            if ( isset( $str->StraatnaamTweedeTaal ) ) {
+                $namen[$str->TaalCodeTweedeTaal] = $str->StraatnaamTweedeTaal;
+            } else {
+                $namen[$str->TaalCodeTweedeTaal] = $str->Straatnaam;
+            }
         }
         $gemeente = $this->getGemeenteById( $str->GemeenteId );
         $s = new Straat( $str->StraatnaamId, $gemeente,
