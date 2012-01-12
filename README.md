@@ -82,3 +82,15 @@ $client = new SoapClient( $wsdl, array( 'trace' => 1 ) );
 $client->setAuthentication( $gebruiker, $wachtwoord );
 $gateway = new CrabGateway( $this->client );
 ```
+
+Afdalen tot een huisnummer.
+
+```php
+$gemeenten = $gateway->listGemeentenByGewestId( );
+$gemeente = $gemeenten[0];
+$straten = $gateway->listStratenByGemeente( $gemeente );
+$straat = $straten[0];
+$huisnummers = $gateway->listHuisnummersByStraat( $straat );
+$huisnummer = $huisnummers[0];
+echo $huisnummer->getStraat()->getLabel() . ' ' . $huisnummer->getId() . PHP_EOL;
+```
