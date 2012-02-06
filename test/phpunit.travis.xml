@@ -7,6 +7,10 @@
 		<testsuite name="Agiv">
 			<directory>tests/KVD/Services/Agiv/</directory>
 		</testsuite>
+
+		<testsuite name="Gis">
+			<directory>tests/KVD/Services/Gis/</directory>
+		</testsuite>
 	</testsuites>
 
 	<filter>
@@ -30,6 +34,8 @@
 		<const name="CAPAKEY_USER" value="" />
 		<const name="CAPAKEY_PASSWORD" value="" />
 		<const name="CAPAKEY_RUN_INTEGRATION_TESTS" value="false" />
+
+		<const name="TMS_RUN_INTEGRATION_TESTS" value="%%TMS_RUN_INTEGRATION_TESTS%%" />
 	</php>
 
 </phpunit>

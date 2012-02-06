@@ -67,6 +67,9 @@
 					<token key="CAPAKEY_RUN_INTEGRATION_TESTS" value="${capakey.run_integration_tests}" />
 					<token key="CAPAKEY_PROXY_HOST" value="${capakey.proxy_host}" />
 					<token key="CAPAKEY_PROXY_PORT" value="${capakey.proxy_port}" />
+					<token key="TMS_RUN_INTEGRATION_TESTS" value="${tms.run_integration_tests}" />
+					<token key="TMS_PROXY_HOST" value="${tms.proxy_host}" />
+					<token key="TMS_PROXY_PORT" value="${tms.proxy_port}" />
 				</replacetokens>
 			</filterchain>
 		</copy>
