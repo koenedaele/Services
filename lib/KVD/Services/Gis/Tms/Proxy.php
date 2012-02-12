@@ -28,6 +28,7 @@ class Proxy
      * @var array
      */
     protected $parameters = array ( 'version' => '1.0.0',
+                                    'mime-type' => 'image/png', 
                                     'cache' => array ( 'active' => false ) );
 
     /**
@@ -97,8 +98,9 @@ class Proxy
         }
         if ( $this->parameters['cache']['active'] == true ) {
             $this->checkCacheDirExists( $version, $layer, $z, $x );
-                $file = $this->parameters['cache']['cache_dir'] . 
-                        "/${version}/${layer}/${z}/${x}/${y}.png";
+            $extension = $this->getExtensionForMimeType( $this->parameters['mime-type'] );
+            $file = $this->parameters['cache']['cache_dir'] . 
+                    "/${version}/${layer}/${z}/${x}/${y}.${extension}";
             $cache_days = isset( $this->parameters['cache']['cache_days'] );
             if ( is_file( $file) && filemtime($file) > time()-(86400*$cache_days) ) {
                 return file_get_contents( $file );
@@ -170,8 +172,22 @@ class Proxy
 
     protected function getTileUrl( $version, $layer, $z, $x, $y )
     {
-        return sprintf( $this->parameters['url'] . '/%s/%s/%d/%d/%d',
+        $extension = $this->getExtensionForMimeType( $this->parameters['mime-type'] );
+        return sprintf( $this->parameters['url'] . '/%s/%s/%d/%d/%d.%s',
                         $version, $layer,
-                        $z, $x, $y );
+                        $z, $x, $y, $extension );
+    }
+
+    /**
+     * getExtensionForMimeType
+     *
+     * @todo Fix for other mime types.
+     *
+     * @param string $mime
+     * @return string
+     */
+    protected function getExtensionForMimeType( $mime )
+    {
+        return 'png';
     }
 }
