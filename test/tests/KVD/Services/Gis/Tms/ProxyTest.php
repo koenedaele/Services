@@ -45,11 +45,19 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     /**
      * @expectedException InvalidArgumentException
      */
-    public function testCacheDaysMustBeInteger( )
+    public function testCacheDaysMustNotBeString( )
     {
         $this->parameters['cache'] ['active'] = true;
         $this->parameters['cache'] ['cache_dir'] = '.';
         $this->parameters['cache'] ['cache_days'] = 'tien';
+        $this->proxy = new Proxy( $this->parameters );
+    }
+
+    public function testCacheDaysMustBeNumeric( )
+    {
+        $this->parameters['cache'] ['active'] = true;
+        $this->parameters['cache'] ['cache_dir'] = '.';
+        $this->parameters['cache'] ['cache_days'] = '25';
         $this->proxy = new Proxy( $this->parameters );
     }
 

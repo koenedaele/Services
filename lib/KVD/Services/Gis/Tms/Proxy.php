@@ -71,8 +71,8 @@ class Proxy
                 }
             }
             if ( isset( $parameters['cache']['cache_days'] ) ) {
-                if ( !is_integer( $parameters['cache']['cache_days'] ) ) {
-                    throw new \InvalidArgumentException( 'cache_days must be an integer.' );
+                if ( !is_numeric( $parameters['cache']['cache_days'] ) ) {
+                    throw new \InvalidArgumentException( 'cache_days must be a number.' );
                 }
             } else {
                 $parameters['cache']['cache_days'] = 30;
