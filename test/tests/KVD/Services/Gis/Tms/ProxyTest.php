@@ -70,6 +70,15 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         $this->proxy = new Proxy( $this->parameters );
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testReturnMustBeStringOrStream( )
+    {
+        $this->parameters['return'] = 'somethingElse';
+        $this->proxy = new Proxy( $this->parameters );
+    }
+
     public function testGetTile( )
     {
         $layer = 'grb_bsk@BPL72VL';
@@ -140,6 +149,96 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         //aangesproken.
         $res = $this->proxy->getTile( $layer, $z, $x, $y );
         $this->assertNotEmpty( $res );
+
+        unlink( $this->parameters['cache']['cache_dir'] .
+            "/${version}/${layer}/${z}/${x}/${y}.png" );
+        rmdir( $this->parameters['cache']['cache_dir'] .
+            "/${version}/${layer}/${z}/${x}" );
+        rmdir( $this->parameters['cache']['cache_dir'] .
+            "/${version}/${layer}/${z}" );
+        rmdir( $this->parameters['cache']['cache_dir'] . 
+            "/${version}/${layer}" );
+        rmdir( $this->parameters['cache']['cache_dir'] . 
+            "/${version}" );
+        rmdir( $this->parameters['cache']['cache_dir'] );
+    }
+
+    /**
+     * testReturnStreamWithoutCacheThrowsException
+     * @expectedException LogicException
+     */
+    public function testReturnStreamWithoutCacheThrowsException( )
+    {
+        $this->parameters['return'] = 'stream';
+        $this->proxy = new Proxy( $this->parameters );
+
+        $layer = 'grb_bsk@BPL72VL';
+        $z = 1;
+        $x = 0;
+        $y = 0;
+
+        $res = $this->proxy->getTile( $layer, $z, $x, $y );
+    }
+
+    public function testReturnStreamAndWriteCache( )
+    {
+        $this->parameters['cache']['active'] = true;
+        $this->parameters['cache']['cache_dir'] = __DIR__ . '/cache';
+        mkdir( $this->parameters['cache']['cache_dir'] );
+        $this->proxy = new Proxy( $this->parameters );
+
+        $layer = 'grb_bsk@BPL72VL';
+        $z = 1;
+        $x = 0;
+        $y = 0;
+
+        $res = $this->proxy->getTile( $layer, $z, $x, $y, array ( 'return' => 'stream' ) );
+        $this->assertTrue( is_resource( $res ) );
+
+        $version = '1.0.0';
+
+        $this->assertFileExists( $this->parameters['cache']['cache_dir'] . 
+            "/${version}/${layer}/${z}/${x}/${y}.png" );
+        unlink( $this->parameters['cache']['cache_dir'] .
+            "/${version}/${layer}/${z}/${x}/${y}.png" );
+        rmdir( $this->parameters['cache']['cache_dir'] .
+            "/${version}/${layer}/${z}/${x}" );
+        rmdir( $this->parameters['cache']['cache_dir'] .
+            "/${version}/${layer}/${z}" );
+        rmdir( $this->parameters['cache']['cache_dir'] . 
+            "/${version}/${layer}" );
+        rmdir( $this->parameters['cache']['cache_dir'] . 
+            "/${version}" );
+        rmdir( $this->parameters['cache']['cache_dir'] );
+    }
+
+    public function testReadCacheAndReturnStream( )
+    {
+
+        $this->parameters['cache']['active'] = true;
+        $this->parameters['cache']['cache_dir'] = __DIR__ . '/cache';
+        $this->parameters['cache']['cache_days'] = 10;
+        mkdir( $this->parameters['cache']['cache_dir'] );
+        $this->proxy = new Proxy( $this->parameters );
+
+        $layer = 'grb_bsk@BPL72VL';
+        $z = 1;
+        $x = 0;
+        $y = 0;
+
+        $res = $this->proxy->getTile( $layer, $z, $x, $y, array ( 'return' => 'stream' ) );
+        $this->assertTrue( is_resource( $res ) );
+
+        $version = '1.0.0';
+
+        $this->assertFileExists( $this->parameters['cache']['cache_dir'] . 
+            "/${version}/${layer}/${z}/${x}/${y}.png" );
+
+        //Tweede request
+        //Voorlopig geen idee hoe we kunnen checken dat de cache effectief werd 
+        //aangesproken.
+        $res = $this->proxy->getTile( $layer, $z, $x, $y, array ( 'return' => 'stream' ) );
+        $this->assertTrue( is_resource( $res ) );
 
         unlink( $this->parameters['cache']['cache_dir'] .
             "/${version}/${layer}/${z}/${x}/${y}.png" );

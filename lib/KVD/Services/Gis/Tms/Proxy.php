@@ -28,7 +28,8 @@ class Proxy
      * @var array
      */
     protected $parameters = array ( 'version' => '1.0.0',
-                                    'mime-type' => 'image/png', 
+                                    'mime-type' => 'image/png',
+                                    'return' => 'string',
                                     'cache' => array ( 'active' => false ) );
 
     /**
@@ -39,6 +40,12 @@ class Proxy
      *  <li><strong>url: </strong>Url to the base of the service. Required</li>
      *  <li><strong>version: </strong>Version of the TMS service. Defaults to 
      *  1.0.0</li>
+     *  <li><strong>mime-type: </strong>The mime type of the tiles to be 
+     *  requested. Currently only image/png is supported. Optional and defaults 
+     *  to image/png.</li>
+     *  <li><strong>return: </strong> Shoudl the getTile method return the 
+     *  contents of tiles as in memory strings (string) or as streams (stream). 
+     *  Optional and defaults to string.</li>
      *  <li><strong>cache: </strong>An array that determines if caching is
      *  needed and where to cache.</li>
      *  <li><strong>cache.active: </strong>Switch to decide if caching is on or 
@@ -78,6 +85,11 @@ class Proxy
                 $parameters['cache']['cache_days'] = 30;
             }
         }
+        if ( isset( $parameters['return'] ) ) {
+            if ( !($parameters['return'] == 'string' || $parameters['return'] == 'stream' ) ) {
+                throw new \InvalidArgumentException( 'return parameter must be string or stream.' );
+            }
+        }
         $this->parameters = array_merge( $this->parameters, $parameters );
     }
 
@@ -88,44 +100,55 @@ class Proxy
      * @param integer $z
      * @param integer $x
      * @param integer $y
-     * @param string  $version Defaults to 1.0.0
+     * @param array   $options Can contain version or return parameter. 
+     *                         Overrides the class default.
      * @return string String containing the tile.
      */
-    public function getTile( $layer, $z, $x, $y, $version = null )
+    public function getTile( $layer, $z, $x, $y, $options = array( ) )
     {
-        if ( $version == null ) {
-            $version = $this->parameters['version'];
+        $version = isset( $options['version'] ) ?  $options['version'] : $this->parameters['version'];
+        $return = isset( $options['return'] ) ?  $options['return'] : $this->parameters['return'];
+        if ( $return == 'stream' && !$this->parameters['cache']['active'] ) {
+            throw new \LogicException( 'Returning streams is only supported when using caching.' );
         }
-        if ( $this->parameters['cache']['active'] == true ) {
+        // Check if we're caching stuff.
+        if ( $this->parameters['cache']['active'] ) {
             $this->checkCacheDirExists( $version, $layer, $z, $x );
             $extension = $this->getExtensionForMimeType( $this->parameters['mime-type'] );
             $file = $this->parameters['cache']['cache_dir'] . 
                     "/${version}/${layer}/${z}/${x}/${y}.${extension}";
             $cache_days = isset( $this->parameters['cache']['cache_days'] );
+            // if we have it in cache and it's not stale, return it
             if ( is_file( $file) && filemtime($file) > time()-(86400*$cache_days) ) {
-                return file_get_contents( $file );
+                if ( $return == 'stream' ) {
+                    return fopen( $file, 'rb' );
+                } else {
+                    return file_get_contents( $file );
+                }
             }
+            // get it, cache it and return
             $url = $this->getTileUrl( $version, $layer, $z, $x, $y );
             $ch = $this->getCurl( $url );
             curl_setopt( $ch, CURLOPT_HEADER, false);
             $fp = fopen( $file, "w");
             curl_setopt( $ch, CURLOPT_FILE, $fp );
+            $response = curl_exec( $ch);
+            fflush( $fp );
+            fclose( $fp );
+            curl_close( $ch);
+            if ( $return == 'stream' ) {
+                return fopen( $file, 'rb' );
+            } else {
+                return file_get_contents( $file );
+            }
         } else {
             $url = $this->getTileUrl( $version, $layer, $z, $x, $y );
             $ch = $this->getCurl( $url );
             curl_setopt( $ch, CURLOPT_HEADER, false);
             curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-        }
-        if ( $this->parameters['cache']['active'] == false ) {
             $response = curl_exec( $ch);
             curl_close( $ch);
             return $response;
-        } else {
-            $response = curl_exec( $ch);
-            fflush( $fp );
-            fclose( $fp );
-            curl_close( $ch);
-            return file_get_contents( $file );
         }
     }
 
