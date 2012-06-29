@@ -39,10 +39,13 @@ Dit commando zal een map build/reports/coverage aanmaken waar je kunt zie welke 
 Aanmaken van de Gateway.
 
 ```php
+use KVD\Services\Agiv\caPaKey\SoapClient;                                          
+use KVD\Services\Agiv\CaPaKey\CaPaKeyGateway;
+
 $wsdl = 'http://ws.agiv.be/capakeyws/nodataset.asmx?WSDL';
 $client = new SoapClient( $wsdl, array( 'trace' => 1 ) );
 $client->setAuthentication( $gebruiker, $wachtwoord );
-$gateway = new CaPaKeyGateway( $this->client );
+$gateway = new CaPaKeyGateway( $client );
 ```
 
 Afdalen tot een perceel.
@@ -77,10 +80,13 @@ echo 'Perceelsnummer: ' . $perceel->getId() . "\n";
 Aanmaken van de Gateway.
 
 ```php
+use KVD\Services\Agiv\Crab\SoapClient;                                          
+use KVD\Services\Agiv\Crab\CrabGateway;
+
 $wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
 $client = new SoapClient( $wsdl, array( 'trace' => 1 ) );
 $client->setAuthentication( $gebruiker, $wachtwoord );
-$gateway = new CrabGateway( $this->client );
+$gateway = new CrabGateway( $client );
 ```
 
 Afdalen tot een huisnummer.
