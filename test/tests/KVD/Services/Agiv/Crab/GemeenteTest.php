@@ -101,5 +101,10 @@ class GemeenteTest extends \PHPUnit_Framework_TestCase
                                   'nl', null );
         $gemeente->getCentroid( );
     }
+
+    public function testGetNaamOnbestaandeTaalGeeftEersteTaal(  )
+    {
+        $this->assertEquals('TestGemeente', $this->gemeente->getNaam('de'));
+    }
 }
 ?>

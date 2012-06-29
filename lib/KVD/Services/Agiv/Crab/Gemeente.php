@@ -157,12 +157,15 @@ class Gemeente
      *
      * @return string
      */
-    public function getNaam( $taal = 'nl' )
+    public function getNaam( $taal = null )
     {
+        if ( $taal === null ) {
+            $taal = $this->taalCode;
+        }
         if ( isset( $this->namen[$taal] ) ) {
             return $this->namen[$taal];
         } else {
-            return $this->namen['nl'];
+            return $this->namen[$this->taalCode];
         }
     }
 
