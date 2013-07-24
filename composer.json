@@ -1,0 +1,21 @@
+{
+	"name": "kvd/services",
+	"description": "A library containing gateways to various webservices.",
+	"keywords": ["webservice","agiv","crab","capakey"],
+	"type": "library",
+	"license": "MIT",
+	"authors": [
+		{
+			"name": "Koen Van Daele",
+			"email": "koen_van_daele@telenet.be"
+		}
+	],
+	"require": {
+		"php": ">=5.3.0"
+	},
+	"autoload": {
+		"psr-0": { 
+			"KVD\\Services": "lib/"
+		}
+	}
+}
