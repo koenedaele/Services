@@ -16,11 +16,27 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
             }
         }
         $this->proxy = new Proxy( $this->parameters );
+        $this->cache_dir = __DIR__ . '/cache';
+        if ( is_dir($this->cache_dir) ) {
+            $this->delTree( $this->cache_dir );
+        }
+        mkdir( $this->cache_dir );
     }
 
     public function tearDown( )
     {
         $this->proxy = null;
+        if ( is_dir($this->cache_dir) ) {
+            $this->delTree( $this->cache_dir );
+        }
+    }
+
+    private static function delTree( $dir) {
+        $files = array_diff( scandir( $dir), array( '.','..'));
+        foreach ( $files as $file) {
+            ( is_dir( "$dir/$file")) ? self::delTree( "$dir/$file") : unlink( "$dir/$file");
+        }
+        return rmdir( $dir);
     }
 
     /**
@@ -93,8 +109,7 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     public function testWriteCache( )
     {
         $this->parameters['cache']['active'] = true;
-        $this->parameters['cache']['cache_dir'] = __DIR__ . '/cache';
-        mkdir( $this->parameters['cache']['cache_dir'] );
+        $this->parameters['cache']['cache_dir'] = $this->cache_dir;
         $this->proxy = new Proxy( $this->parameters );
 
         $layer = 'grb_bsk@BPL72VL';
@@ -109,26 +124,14 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFileExists( $this->parameters['cache']['cache_dir'] . 
             "/${version}/${layer}/${z}/${x}/${y}.png" );
-        unlink( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}/${y}.png" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}/${layer}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}" );
-        rmdir( $this->parameters['cache']['cache_dir'] );
     }
 
     public function testReadCache( )
     {
 
         $this->parameters['cache']['active'] = true;
-        $this->parameters['cache']['cache_dir'] = __DIR__ . '/cache';
+        $this->parameters['cache']['cache_dir'] = $this->cache_dir;
         $this->parameters['cache']['cache_days'] = 10;
-        mkdir( $this->parameters['cache']['cache_dir'] );
         $this->proxy = new Proxy( $this->parameters );
 
         $layer = 'grb_bsk@BPL72VL';
@@ -149,18 +152,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         //aangesproken.
         $res = $this->proxy->getTile( $layer, $z, $x, $y );
         $this->assertNotEmpty( $res );
-
-        unlink( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}/${y}.png" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}/${layer}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}" );
-        rmdir( $this->parameters['cache']['cache_dir'] );
     }
 
     /**
@@ -183,8 +174,7 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
     public function testReturnStreamAndWriteCache( )
     {
         $this->parameters['cache']['active'] = true;
-        $this->parameters['cache']['cache_dir'] = __DIR__ . '/cache';
-        mkdir( $this->parameters['cache']['cache_dir'] );
+        $this->parameters['cache']['cache_dir'] = $this->cache_dir;
         $this->proxy = new Proxy( $this->parameters );
 
         $layer = 'grb_bsk@BPL72VL';
@@ -199,26 +189,14 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
 
         $this->assertFileExists( $this->parameters['cache']['cache_dir'] . 
             "/${version}/${layer}/${z}/${x}/${y}.png" );
-        unlink( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}/${y}.png" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}/${layer}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}" );
-        rmdir( $this->parameters['cache']['cache_dir'] );
     }
 
     public function testReadCacheAndReturnStream( )
     {
 
         $this->parameters['cache']['active'] = true;
-        $this->parameters['cache']['cache_dir'] = __DIR__ . '/cache';
+        $this->parameters['cache']['cache_dir'] = $this->cache_dir;
         $this->parameters['cache']['cache_days'] = 10;
-        mkdir( $this->parameters['cache']['cache_dir'] );
         $this->proxy = new Proxy( $this->parameters );
 
         $layer = 'grb_bsk@BPL72VL';
@@ -239,18 +217,6 @@ class ProxyTest extends \PHPUnit_Framework_TestCase
         //aangesproken.
         $res = $this->proxy->getTile( $layer, $z, $x, $y, array ( 'return' => 'stream' ) );
         $this->assertTrue( is_resource( $res ) );
-
-        unlink( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}/${y}.png" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}/${x}" );
-        rmdir( $this->parameters['cache']['cache_dir'] .
-            "/${version}/${layer}/${z}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}/${layer}" );
-        rmdir( $this->parameters['cache']['cache_dir'] . 
-            "/${version}" );
-        rmdir( $this->parameters['cache']['cache_dir'] );
     }
  
 }
