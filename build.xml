@@ -57,8 +57,6 @@
 		<copy file="test/dev/phpunit.dist.xml" tofile="test/phpunit.xml" overwrite="true">
 			<filterchain>
 				<replacetokens begintoken="%%" endtoken="%%">
-					<token key="CRAB_USER" value="${crab.user}" />
-					<token key="CRAB_PASSWORD" value="${crab.password}" />
 					<token key="CRAB_RUN_INTEGRATION_TESTS" value="${crab.run_integration_tests}" />
 					<token key="CRAB_PROXY_HOST" value="${crab.proxy_host}" />
 					<token key="CRAB_PROXY_PORT" value="${crab.proxy_port}" />

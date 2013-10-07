@@ -26,10 +26,9 @@ class CrabGatewayIntegrationTest extends \PHPUnit_Framework_TestCase
         if ( CRAB_RUN_INTEGRATION_TESTS === false  ) {
             $this->markTestSkipped( );
         }
-        $wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
+        $wsdl = 'http://crab.agiv.be/wscrab/wscrab.svc?wsdl';
         $this->client = new SoapClient( $wsdl,
                                         array( 'trace' => 1 ) );
-        $this->client->setAuthentication( CRAB_USER, CRAB_PASSWORD );
         $this->gateway = new CrabGateway( $this->client );
     }
 

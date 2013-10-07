@@ -1,6 +1,6 @@
 # KVD Services
 
-Deze bibliotheek bevat code om een aantal services van het AGIV te gebruiken vanuit php. Voorlopig is er een interface naar de CaPaKey webservice. Op termijn komt er ook een interface naar de CRAB webservice bij. Om deze interfaces te kunnen gebruiken heb je toegang nodig. Een login en wachtwoord kan je verkrijgen op de website van het AGIV (http://www.agiv.be)
+Deze bibliotheek bevat code om een aantal services van het AGIV te gebruiken vanuit php. Er zijn interfaces beschikbaar voor zoals wel CaPaKey service als de CRAB service. Om de CaPaKey service te kunnen gebruiken heb je toegang nodig. Een login en wachtwoord kan je verkrijgen op de website van het AGIV (http://www.agiv.be). De CRAB service valt onder open data en is vrij toegankelijk.
 
 ## Build status
 
@@ -10,10 +10,8 @@ Deze bibliotheek bevat code om een aantal services van het AGIV te gebruiken van
 
 Deze bibliotheek werd ontwikkeld met bijhorende unit tests. Om te controleren of de code naar behoren werkt op uw systeem kun je deze uitvoeren. Hiervoor is een recente versie van PHPUnit nodig (3.5 of 3.6) en een recente versie van Phing (2.4).
 
-Vooraleer je de tests kunt uitvoeren moet je je gebruikersnaam en wachtwoord kenbaar maken. Doe dit door een bestand build.properties aan te maken en daarin het volgende te zetten:
+Vooraleer je de tests met de capakey webservice kunt uitvoeren moet je je gebruikersnaam en wachtwoord kenbaar maken. Doe dit door een bestand build.properties aan te maken en daarin het volgende te zetten:
 
-	crab.user=<gebruiker>
-	crab.password=<wachtwoord>
 	crab.run_integration_tests=false
 
 	capakey.user=<gebruiker>
@@ -75,6 +73,9 @@ echo 'Perceelsnummer: ' . $perceel->getId() . "\n";
 
 ## CRAB Gateway
 
+In tegenstelling tot de Capakey gateway en tot vroeger heb je voor de CRAB service 
+geen wachtwoord meer nodig.
+
 ###Voorbeelden
 
 Aanmaken van de Gateway.
@@ -83,9 +84,8 @@ Aanmaken van de Gateway.
 use KVD\Services\Agiv\Crab\SoapClient;                                          
 use KVD\Services\Agiv\Crab\CrabGateway;
 
-$wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
+$wsdl = 'http://crab.agiv.be/wscrab/wscrab.svc?wsdl';
 $client = new SoapClient( $wsdl, array( 'trace' => 1 ) );
-$client->setAuthentication( $gebruiker, $wachtwoord );
 $gateway = new CrabGateway( $client );
 ```
 

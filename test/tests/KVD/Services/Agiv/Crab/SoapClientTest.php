@@ -27,11 +27,10 @@ class SoapClientTest extends \PHPUnit_Framework_TestCase
         if ( CRAB_RUN_INTEGRATION_TESTS === false  ) {
             $this->markTestSkipped( );
         }
-        $wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
+        $wsdl = 'http://crab.agiv.be/wscrab/wscrab.svc?wsdl';
         $this->client = new SoapClient( $wsdl,
                                         array( 'trace' => 1,
                                                'exceptions' => 1 ) );
-        $this->client->setAuthentication( CRAB_USER, CRAB_PASSWORD );
 
     }
 
@@ -45,29 +44,5 @@ class SoapClientTest extends \PHPUnit_Framework_TestCase
         $this->client->ListGemeentenByGewestId( 2 );
     }
 
-    /**
-     * @expectedException LogicException
-     */
-    public function testMustBeAuthenticated( )
-    {
-        $wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
-        $this->client = new SoapClient( $wsdl,
-                                        array( 'trace' => 1,
-                                               'exceptions' => 1 ) );
-        $this->client->ListGemeentenByGewestId( 2 );
-    }
-
-    /**
-     * @expectedException SoapFault
-     */
-    public function testAuthenticationIsValid( )
-    {
-        $wsdl = 'http://ws.agiv.be/crabws/nodataset.asmx?WSDL';
-        $this->client = new SoapClient( $wsdl,
-                                        array( 'trace' => 1,
-                                               'exceptions' => 1 ) );
-        $this->client->setAuthentication( CRAB_USER, 'invalid' );
-        $this->client->ListGemeentenByGewestId( 2 );
-    }
 }
 ?>

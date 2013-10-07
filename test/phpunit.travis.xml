@@ -27,9 +27,7 @@
 	</logging>
 
 	<php>
-		<const name="CRAB_USER" value="" />
-		<const name="CRAB_PASSWORD" value="" />
-		<const name="CRAB_RUN_INTEGRATION_TESTS" value="false" />
+		<const name="CRAB_RUN_INTEGRATION_TESTS" value="true" />
 
 		<const name="CAPAKEY_USER" value="" />
 		<const name="CAPAKEY_PASSWORD" value="" />
